@@ -1,0 +1,17 @@
+{
+  "name": "The Terminal // Sovereign Intelligence",
+  "short_name": "Terminal",
+  "description": "Anti-noise Indian strategic intelligence and sovereign macro-research.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "logos/logo_indian_squircle_chakra.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
