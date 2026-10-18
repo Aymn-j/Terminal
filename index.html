@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>THE TERMINAL // Sovereign Intelligence & Macro Research</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>THE TERMINAL // Sovereign Intelligence & Engineering Vault</title>
   
   <!-- Minimalist Terminal Prompt Favicon (>_) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23050505'/><polyline points='25,30 50,50 25,70' fill='none' stroke='%23ffffff' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/><line x1='58' y1='70' x2='80' y2='70' stroke='%23ffffff' stroke-width='10' stroke-linecap='round'/></svg>">
   
-  <!-- PWA & Mobile Web App Meta Tags -->
+  <!-- Universal Phone & Mobile Web App Meta Tags (PWA Standalone) -->
   <meta name="theme-color" content="#050505" id="meta-theme-color">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Terminal">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="logos/logo_prompt_pure.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="logos/apple-touch-icon.png">
   
   <!-- Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,13 +30,16 @@
       --card-hover: #141414;
       --text-main: #f0f0f0;
       --text-muted: #8e8e8e;
-      --text-dim: #555555;
+      --text-dim: #444444;
       --border: #1a1a1a;
       --tag-bg: rgba(255, 255, 255, 0.05);
       --blockquote-border: #444444;
+      --code-bg: #080808;
       --font-body: 'Charter', Georgia, Cambria, serif;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'Fira Code', monospace;
+      --scrollbar-thumb: #222222;
+      --scrollbar-track: #050505;
     }
 
     [data-theme="light"] {
@@ -43,10 +48,13 @@
       --card-hover: #f1f3f5;
       --text-main: #111111;
       --text-muted: #555555;
-      --text-dim: #888888;
+      --text-dim: #999999;
       --border: #e5e7eb;
       --tag-bg: rgba(0, 0, 0, 0.05);
       --blockquote-border: #9ca3af;
+      --code-bg: #f4f4f5;
+      --scrollbar-thumb: #d1d5db;
+      --scrollbar-track: #ffffff;
     }
 
     * {
@@ -56,6 +64,27 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* CUSTOM MINIMALIST SCROLLBAR */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--scrollbar-track);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--scrollbar-thumb);
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-dim);
+    }
+
     body {
       background-color: var(--bg-color);
       color: var(--text-main);
@@ -63,6 +92,7 @@
       line-height: 1.85;
       transition: background-color 0.2s ease, color 0.2s ease;
       -webkit-font-smoothing: antialiased;
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     /* TOP NAVBAR */
@@ -73,9 +103,9 @@
       background: var(--bg-color);
       z-index: 100;
       transition: background-color 0.2s ease, border-color 0.2s ease;
+      padding-top: env(safe-area-inset-top);
     }
 
-    /* READING PROGRESS BAR AT TOP */
     #scroll-progress {
       position: absolute;
       bottom: 0;
@@ -88,7 +118,7 @@
     }
 
     .nav-container {
-      max-width: 760px;
+      max-width: 1140px;
       margin: 0 auto;
       padding: 16px 20px;
       display: flex;
@@ -175,7 +205,6 @@
       align-items: center;
     }
 
-    /* MINIMALIST SVG ICON BUTTONS */
     .icon-btn {
       background: transparent;
       border: 1px solid var(--border);
@@ -196,22 +225,7 @@
       background: var(--tag-bg);
     }
 
-    /* MOBILE SUB-NAV TABS */
-    .mobile-tab-bar {
-      display: none;
-      border-top: 1px solid var(--border);
-      padding: 10px 20px;
-      background: var(--bg-color);
-    }
-
-    .mobile-tab-inner {
-      max-width: 760px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    /* SLIDE-DOWN MINIMALIST SEARCH DRAWER */
+    /* SLIDE-DOWN SEARCH DRAWER */
     .search-drawer {
       display: none;
       border-top: 1px solid var(--border);
@@ -226,7 +240,7 @@
     }
 
     .search-inner {
-      max-width: 760px;
+      max-width: 1140px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -274,12 +288,16 @@
 
     /* MAIN CONTAINER */
     main {
-      max-width: 760px;
+      max-width: 1140px;
       margin: 0 auto;
-      padding: 36px 20px 100px 20px;
+      padding: 32px 20px 100px 20px;
     }
 
-    /* SECTION HEADER */
+    .constrained-width {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
     .section-header {
       margin-bottom: 24px;
       border-bottom: 1px solid var(--border);
@@ -413,10 +431,6 @@
       border-color: var(--text-dim);
     }
 
-    .article-header {
-      margin-bottom: 32px;
-    }
-
     h1.full-title {
       font-family: var(--font-sans);
       font-size: 34px;
@@ -473,7 +487,6 @@
       font-size: 11.5px;
     }
 
-    /* ESSAY TYPOGRAPHY */
     .prose {
       font-size: 19px;
       margin-top: 32px;
@@ -517,6 +530,90 @@
     .prose li {
       margin-bottom: 8px;
       color: var(--text-main);
+    }
+
+    /* CODE BLOCKS WITH HEADER & COPY BUTTON */
+    .code-container {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin: 24px 0;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .code-copy-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .code-copy-btn:hover {
+      color: var(--text-main);
+      border-color: var(--text-muted);
+    }
+
+    pre.code-body {
+      padding: 16px 18px;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    /* HARDWARE TABLES IN TECHNICAL NOTES */
+    .tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 22px 0;
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      display: block;
+      overflow-x: auto;
+      max-width: 100%;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tech-table th {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .tech-table td {
+      border: 1px solid var(--border);
+      padding: 9px 14px;
+      color: var(--text-main);
+    }
+
+    .tech-table tr:hover {
+      background: var(--tag-bg);
     }
 
     .dispatch-item {
@@ -596,86 +693,570 @@
       letter-spacing: 1px;
     }
 
-    /* HIDDEN ADMIN STUDIO */
-    #view-admin {
+    /* ========================================================
+       ROCK-SOLID TECH VAULT (FLEX-BASED, UNBREAKABLE LAYOUT)
+       ======================================================== */
+    #view-tech {
       display: none;
+    }
+
+    /* TL;DR EXECUTIVE BRIEF BOX */
+    .tldr-box {
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 28px;
-      background: var(--card-bg);
-      margin-top: 10px;
+      background: var(--tag-bg);
+      border-left: 3px solid var(--text-main);
+      padding: 20px 22px;
+      margin: 24px 0 32px 0;
+      border-radius: 4px;
     }
 
-    .admin-input-group {
-      margin-bottom: 18px;
-    }
-
-    .admin-label {
+    .tldr-title {
       font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-muted);
-      letter-spacing: 1px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .admin-input, .admin-select, .admin-textarea {
-      width: 100%;
-      background: var(--bg-color);
-      border: 1px solid var(--border);
       color: var(--text-main);
-      padding: 10px 12px;
-      border-radius: 4px;
-      font-family: var(--font-sans);
-      font-size: 14px;
-      outline: none;
-    }
-
-    .admin-input:focus, .admin-textarea:focus {
-      border-color: var(--text-dim);
-    }
-
-    .admin-textarea {
-      font-family: var(--font-mono);
-      font-size: 12.5px;
-      line-height: 1.5;
-      min-height: 220px;
-      resize: vertical;
-    }
-
-    .admin-btn-row {
+      margin-bottom: 14px;
       display: flex;
-      gap: 12px;
-      margin-top: 20px;
+      align-items: center;
+      gap: 8px;
     }
 
-    .admin-btn {
+    .tldr-list {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+
+    .tldr-list li {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .tldr-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .tldr-list li span.bullet {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 13px;
+    }
+
+
+    /* ========================================================
+       SIDE-BY-SIDE COMPARISON GRIDS (LEFT VS RIGHT)
+       ======================================================== */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+    @media (max-width: 720px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .compare-card {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card-bg);
+      padding: 18px 20px;
+    }
+    .compare-card.highlight {
+      border-left: 3px solid var(--text-main);
+    }
+    .compare-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
       font-family: var(--font-mono);
       font-size: 11px;
-      letter-spacing: 1px;
+      letter-spacing: 1.2px;
+      font-weight: 700;
       text-transform: uppercase;
-      padding: 10px 18px;
-      border-radius: 4px;
+    }
+    .compare-badge {
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 3px;
+      font-size: 9.5px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+    .compare-card ul {
+      padding-left: 18px;
+      margin-bottom: 0;
+    }
+    .compare-card li {
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+    .compare-card li:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ========================================================
+       LIFE SIMULATION ROADMAP (24-YEAR-OLD AT ₹30K)
+       ======================================================== */
+    .roadmap-timeline {
+      margin: 26px 0;
+      position: relative;
+      border-left: 2px solid var(--border);
+      padding-left: 22px;
+      margin-left: 10px;
+    }
+    .roadmap-step {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .roadmap-step:last-child {
+      margin-bottom: 0;
+    }
+    .roadmap-step::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-main);
+      border: 2px solid var(--bg-color);
+    }
+    .roadmap-phase-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .roadmap-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px 18px;
+    }
+    .roadmap-meta {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .roadmap-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+    .roadmap-card ul {
+      padding-left: 18px;
+      margin-bottom: 0;
+    }
+    .roadmap-card li {
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin-bottom: 6px;
+      color: var(--text-main);
+    }
+
+    .vault-layout {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      min-height: 640px;
+      width: 100%;
+    }
+
+    .vault-sidebar.collapsed {
+      display: none !important;
+    }
+
+    .vault-collapse-icon-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 22px;
+      height: 22px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       transition: all 0.2s;
     }
 
-    .admin-btn-primary {
-      background: var(--text-main);
-      color: var(--bg-color);
-      border: 1px solid var(--text-main);
+    .vault-collapse-icon-btn:hover {
+      color: var(--text-main);
+      border-color: var(--text-dim);
+      background: var(--tag-bg);
+    }
+
+    .vault-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .vault-toggle-btn:hover {
+      color: var(--text-main);
+      border-color: var(--text-dim);
+    }
+
+    .vault-toggle-btn.collapsed-active {
+      color: var(--text-main);
+      border-color: var(--text-muted);
+      background: var(--tag-bg);
+      font-weight: 600;
+    }
+
+    .pwa-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
+    .pwa-modal.show {
+      display: flex;
+    }
+
+    .pwa-modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      max-width: 440px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    }
+
+    .pwa-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .vault-sidebar {
+      width: 290px;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card-bg);
+      padding: 16px;
+      position: sticky;
+      top: 80px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+
+    .vault-sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .vault-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1.2px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-transform: uppercase;
+    }
+
+    .vault-filter-input {
+      width: 100%;
+      background: var(--bg-color);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      margin-bottom: 14px;
+      outline: none;
+    }
+
+    .vault-filter-input:focus {
+      border-color: var(--text-dim);
+    }
+
+    /* PURE MINIMALIST SVG TREE (Zero Emojis) */
+    .tree-root {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      user-select: none;
+    }
+
+    .tree-folder {
+      margin-bottom: 2px;
+    }
+
+    .folder-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 8px;
+      border-radius: 4px;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .folder-header:hover {
+      background: var(--card-hover);
+    }
+
+    .folder-chevron-svg {
+      width: 10px;
+      height: 10px;
+      color: var(--text-muted);
+      transition: transform 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .folder-header.open .folder-chevron-svg {
+      transform: rotate(90deg);
+    }
+
+    .folder-icon-svg {
+      width: 12px;
+      height: 12px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .folder-children {
+      margin-left: 12px;
+      padding-left: 6px;
+      border-left: 1px solid var(--border);
+      display: none;
+    }
+
+    .folder-header.open + .folder-children {
+      display: block;
+    }
+
+    .tree-file {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 8px;
+      border-radius: 4px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+      word-break: break-all;
+    }
+
+    .tree-file:hover {
+      color: var(--text-main);
+      background: var(--card-hover);
+    }
+
+    .tree-file.active {
+      color: var(--text-main);
+      background: var(--tag-bg);
+      font-weight: 600;
+      border-left: 2px solid var(--text-main);
+    }
+
+    .file-icon-svg {
+      width: 11px;
+      height: 11px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* RIGHT PANE: DOCUMENT VIEWER (Full width flex) */
+    .vault-viewer {
+      flex: 1;
+      min-width: 0; /* Prevents word-wrapping glitches or column collapses */
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card-bg);
+      padding: 32px;
+      min-height: 640px;
+    }
+
+    .viewer-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .doc-breadcrumbs {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .doc-breadcrumbs span.sep {
+      color: var(--text-dim);
+    }
+
+    .doc-title {
+      font-family: var(--font-sans);
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .doc-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .doc-content {
+      font-family: var(--font-body);
+      font-size: 17.5px;
+      line-height: 1.85;
+      color: var(--text-main);
+    }
+
+    .doc-content h2 {
+      font-family: var(--font-sans);
+      font-size: 21px;
+      font-weight: 700;
+      margin: 36px 0 14px 0;
+      color: var(--text-main);
+    }
+
+    .doc-content h3 {
+      font-family: var(--font-sans);
+      font-size: 17px;
+      font-weight: 600;
+      margin: 26px 0 8px 0;
+      color: var(--text-main);
+    }
+
+    .doc-content p {
+      margin-bottom: 20px;
+    }
+
+    .doc-content ul {
+      margin-bottom: 20px;
+      padding-left: 22px;
+    }
+
+    .doc-content li {
+      margin-bottom: 6px;
+    }
+
+    /* PWA STANDALONE MOBILE BOTTOM APP BAR (Native App Feel on iOS & Android) */
+    .mobile-app-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-color);
+      border-top: 1px solid var(--border);
+      padding: 8px 10px calc(8px + env(safe-area-inset-bottom)) 10px;
+      z-index: 200;
+      justify-content: space-around;
+      align-items: center;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .mobile-app-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      user-select: none;
+      transition: color 0.15s;
+      padding: 4px 10px;
+    }
+
+    .mobile-app-item.active {
+      color: var(--text-main);
       font-weight: 700;
     }
 
-    .admin-btn-secondary {
-      background: transparent;
-      color: var(--text-main);
-      border: 1px solid var(--border);
+    .mobile-app-item svg {
+      width: 18px;
+      height: 18px;
     }
 
+    /* FOOTER */
     footer {
-      max-width: 760px;
+      max-width: 1140px;
       margin: 60px auto 0 auto;
       padding-top: 24px;
       border-top: 1px solid var(--border);
@@ -687,16 +1268,32 @@
       align-items: center;
     }
 
-    /* RESPONSIVE BREAKPOINTS */
-    @media (max-width: 680px) {
+    /* UNIVERSAL PHONE BREAKPOINTS (All iOS & Android Screen Sizes) */
+    @media (max-width: 860px) {
+      .vault-layout {
+        flex-direction: column;
+      }
+      .vault-sidebar {
+        width: 100%;
+        position: static;
+        max-height: 380px;
+      }
+      .vault-viewer {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
       .nav-center { display: none; }
-      .mobile-tab-bar { display: block; }
+      .mobile-app-bar { display: flex; }
       .nav-container { padding: 14px 16px; }
-      main { padding: 24px 16px 80px 16px; }
-      h1.full-title { font-size: 26px; }
+      main { padding: 18px 16px 110px 16px; }
+      h1.full-title { font-size: 24px; }
       .article-headline { font-size: 18px; }
-      .prose { font-size: 17px; }
-      footer { flex-direction: column; gap: 8px; text-align: center; }
+      .prose { font-size: 16.5px; }
+      .vault-viewer { padding: 20px 16px; }
+      .doc-title { font-size: 22px; }
+      footer { flex-direction: column; gap: 8px; text-align: center; margin-bottom: 70px; }
     }
   </style>
 </head>
@@ -714,13 +1311,14 @@
           <line x1="58" y1="68" x2="78" y2="68" stroke="var(--bg-color)" stroke-width="11" stroke-linecap="round"/>
         </svg>
         <span>THE TERMINAL</span>
-        <span class="tag">INTELLIGENCE</span>
+        <span class="tag">LABS</span>
       </div>
 
       <!-- DESKTOP CENTER TABS -->
       <div class="nav-center">
         <span class="nav-link active" id="nav-dispatches" onclick="navigateTo('dispatches')">DISPATCHES</span>
         <span class="nav-link" id="nav-essays" onclick="navigateTo('essays')">RESEARCH ESSAYS</span>
+        <span class="nav-link" id="nav-tech" onclick="navigateTo('tech')">TECH VAULT</span>
         <span class="nav-link" id="nav-manifesto" onclick="navigateTo('manifesto')">MANIFESTO</span>
       </div>
       
@@ -734,9 +1332,17 @@
           </svg>
         </button>
 
+        <!-- SVG PWA INSTALL BUTTON -->
+        <button class="icon-btn pwa-install-btn" onclick="triggerPWAInstall()" id="pwa-install-btn" title="Install App (Add to Home Screen)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </button>
+
         <!-- SVG THEME TOGGLE (SUN / MOON) -->
         <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Toggle Light/Dark Theme">
-          <!-- Sun Icon (Default in Dark mode) -->
           <svg id="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -748,20 +1354,10 @@
             <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
           </svg>
-          <!-- Moon Icon (Hidden in Dark mode) -->
           <svg id="icon-moon" style="display:none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
         </button>
-      </div>
-    </div>
-
-    <!-- MOBILE HORIZONTAL TAB BAR -->
-    <div class="mobile-tab-bar">
-      <div class="mobile-tab-inner">
-        <span class="nav-link active" id="mob-dispatches" onclick="navigateTo('dispatches')">DISPATCHES</span>
-        <span class="nav-link" id="mob-essays" onclick="navigateTo('essays')">RESEARCH ESSAYS</span>
-        <span class="nav-link" id="mob-manifesto" onclick="navigateTo('manifesto')">MANIFESTO</span>
       </div>
     </div>
 
@@ -772,7 +1368,7 @@
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <input type="text" id="site-search" class="search-input" placeholder="Type to search archive (e.g. debt, space, aging, rbi)..." oninput="handleSearch()">
+        <input type="text" id="site-search" class="search-input" placeholder="Search archive (e.g. plc, stm32, modbus, debt, space)..." oninput="handleSearch()">
         <span class="search-count" id="search-count"></span>
         <button class="search-close" onclick="toggleSearch()" title="Close Search">✕</button>
       </div>
@@ -781,7 +1377,7 @@
 
   <main>
     <!-- VIEW 1: DAILY STRATEGIC DISPATCHES FEED -->
-    <section id="view-dispatches">
+    <section id="view-dispatches" class="constrained-width">
       <div class="section-header" id="dispatches-header">
         <span class="section-title">DAILY STRATEGIC INTELLIGENCE // ARCHIVE</span>
         <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">OCTOBER 2026</span>
@@ -804,7 +1400,7 @@
     </section>
 
     <!-- VIEW 2: WEEKLY RESEARCH ESSAYS FEED -->
-    <section id="view-essays" style="display:none;">
+    <section id="view-essays" class="constrained-width" style="display:none;">
       <div class="section-header" id="essays-header">
         <span class="section-title">WEEKLY RESEARCH ESSAYS // SOCIOLOGY & MACROECONOMICS</span>
         <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">MONOGRAPH SERIES</span>
@@ -814,14 +1410,14 @@
         <!-- ESSAY 1 CARD -->
         <article class="article-card filterable" data-type="essay" onclick="navigateToArticle('essay-aging')">
           <div class="article-meta">
-            <span>ESSAY #001 // 8 MIN READ</span>
-            <span class="article-tag">MACRO-SOCIOLOGY</span>
+            <span>ESSAY #001 // 12 MIN READ • HIGH-IMPACT DOSSIER</span>
+            <span class="article-tag">MACRO-DEMOGRAPHICS</span>
           </div>
-          <h2 class="article-headline">The Silent Business of Aging: Inside the Commercialization of Indian Elder Care</h2>
+          <h2 class="article-headline">The Silent Business of Aging: Inside the Commercialization & Crisis of Indian Elder Care</h2>
           <p class="article-preview">
-            Why traditional intergenerational family pacts in India are structurally collapsing, how real-estate developers are financializing loneliness, and the hidden economic arithmetic of the senior living boom.
+            A clear, data-backed breakdown of India's 149-million elder population: exact old age home counts, real-world costs across 6 cities, caregiving math, and why the traditional joint family is structurally collapsing.
           </p>
-          <div class="read-cue">Read Full Research Essay →</div>
+          <div class="read-cue">Read Full Intelligence Brief →</div>
         </article>
 
         <!-- ESSAY 2 CARD -->
@@ -852,11 +1448,74 @@
       </div>
     </section>
 
+    <!-- ========================================================
+         VIEW 3: TECH VAULT (ENGINEERING & NESTED FOLDER ARCHIVE)
+         ======================================================== -->
+    <section id="view-tech">
+      <div class="section-header">
+        <span class="section-title">ENGINEERING VAULT // EMBEDDED, PLC & HARDWARE DOSSIERS</span>
+        <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">MNNIT ECE REPO</span>
+      </div>
+
+      <div class="vault-layout" id="vault-layout">
+        <!-- LEFT EXPLORER PANE: NESTED DIRECTORY TREE -->
+        <aside class="vault-sidebar" id="vault-sidebar">
+          <div class="vault-sidebar-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="vault-title">EXPLORER // LAB FILES</span>
+              <span style="font-family:var(--font-mono); font-size:9.5px; color:var(--text-dim);" id="file-count-label"></span>
+            </div>
+            <button class="vault-collapse-icon-btn" onclick="toggleVaultSidebar()" title="Collapse Explorer Sidebar">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+          </div>
+          
+          <input type="text" id="vault-filter" class="vault-filter-input" placeholder="Filter dossiers (e.g. plc, dma, fsm)..." oninput="filterVaultFiles()">
+
+          <div class="tree-root" id="tree-container">
+            <!-- Dynamically populated from techTree with pure SVG icons -->
+          </div>
+        </aside>
+
+        <!-- RIGHT VIEWER PANE: NATIVE FILE VIEWER -->
+        <div class="vault-viewer" id="doc-viewer">
+          <div class="viewer-top-row">
+            <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+              <button class="vault-toggle-btn" id="vault-toggle-btn" onclick="toggleVaultSidebar()" title="Toggle Explorer Sidebar (Ctrl+B)">
+                <svg id="vault-toggle-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="3" x2="9" y2="21"></line>
+                </svg>
+                <span id="vault-toggle-label">Hide Sidebar</span>
+              </button>
+              <div class="doc-breadcrumbs" id="doc-breadcrumbs">
+                <span>TECH VAULT</span>
+              </div>
+            </div>
+            <button class="share-btn" onclick="copyCurrentTechDoc()" id="copy-tech-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>COPY NOTE</span>
+            </button>
+          </div>
+
+          <h1 class="doc-title" id="doc-title">Select a technical note to view</h1>
+          <div class="doc-meta" id="doc-meta">
+            <span id="doc-meta-info">STANDALONE HARDWARE INTELLIGENCE</span>
+          </div>
+          <div class="doc-content" id="doc-body">
+            <!-- Native formatted content injected here -->
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- NO SEARCH RESULTS PLACEHOLDER -->
     <div id="no-results">NO ARCHIVE ENTRIES FOUND MATCHING YOUR QUERY.</div>
 
-    <!-- VIEW 3: DEDICATED FULL ARTICLE READER -->
-    <section id="view-article-reader" style="display:none;">
+    <!-- VIEW 4: DEDICATED FULL ARTICLE READER -->
+    <section id="view-article-reader" class="constrained-width" style="display:none;">
       <div class="reader-top-bar">
         <div class="back-btn" id="reader-back-btn" onclick="goBackFromReader()">← Back to Feed</div>
         <button class="share-btn" id="reader-share-btn" onclick="copyCurrentArticleLink()">
@@ -869,8 +1528,8 @@
       </article>
     </section>
 
-    <!-- VIEW 4: FOUNDER MANIFESTO -->
-    <section id="view-manifesto" style="display:none;">
+    <!-- VIEW 5: FOUNDER MANIFESTO -->
+    <section id="view-manifesto" class="constrained-width" style="display:none;">
       <article>
         <div class="article-meta" style="margin-bottom:14px;">
           <span>MANIFESTO // 4 MIN READ</span>
@@ -900,16 +1559,13 @@
           <p>
             If you open Instagram, YouTube Shorts, or X right now, the algorithmic feed serves an engineered sludge: influencer drama blown out of proportion, manufactured celebrity feuds designed to harvest engagement rage, and screaming television anchors treating governance like a circus wrestling match.
           </p>
-
           <blockquote>
             "The modern media architecture does not monetize knowledge. It monetizes emotional dysregulation and dopamine addiction. The longer you stay agitated, the more ads are auctioned against your attention."
           </blockquote>
-
           <h2>The False Knowledge of the 30-Second Reel</h2>
           <p>
             Gen-Z suffers from a dangerous neurological delusion: <strong>the illusion of competence gained from reels.</strong> Watching a 30-second video about geopolitics or finance is not studying. It is a neurological counterfeit. You did not acquire knowledge; you merely rented a fleeting hit of dopamine that tricks your ego into feeling productive while leaving your intellect completely empty.
           </p>
-
           <h2>The Modern Reckoning (After Martin Niemöller)</h2>
           <div class="reckoning-simple">
             <p>
@@ -928,77 +1584,73 @@
               Then they took away your <strong>economic sovereignty</strong>—and when you looked up at age thirty, financially trapped, mentally depleted, and utterly ignorant of how the nation actually works... <strong>there was no one left to blame but yourself.</strong>
             </p>
           </div>
-
-          <h2>Our Operating Principles</h2>
-          <ol style="margin-bottom:24px; padding-left:20px;">
-            <li style="margin-bottom:10px;"><strong>Zero Sensory Assault:</strong> No screaming anchors. No robotic text-to-speech. No frantic music. Just crisp typography on pure black.</li>
-            <li style="margin-bottom:10px;"><strong>High Semantic Density:</strong> Every dispatch is structured into: Event, Mechanism, Hard Data, and Bottom Line. Under 60 seconds to comprehend.</li>
-            <li style="margin-bottom:10px;"><strong>The Primary Source Standard:</strong> Only statutory records—PIB, RBI, Supreme Court filings, and ministry gazettes. Secondary opinion blogs are ignored.</li>
-            <li style="margin-bottom:10px;"><strong>Respect for Sovereignty:</strong> Zero intrusive ads or popups. We present verified signal, and let your intellect draw the conclusions.</li>
-          </ol>
         </div>
       </article>
     </section>
-
-    <!-- VIEW 5: HIDDEN TERMINAL STUDIO (#admin or Ctrl+Shift+P) -->
-    <section id="view-admin">
-      <div class="section-header">
-        <span class="section-title">TERMINAL DESK STUDIO // ARTICLE DRAFTER & PUBLISHER</span>
-        <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">ROOT ACCESS</span>
-      </div>
-
-      <div class="admin-input-group">
-        <label class="admin-label">Publish Type</label>
-        <select id="admin-type" class="admin-select">
-          <option value="essay">Weekly Research Essay (Monograph)</option>
-          <option value="dispatch">Daily Strategic Dispatch</option>
-        </select>
-      </div>
-
-      <div class="admin-input-group">
-        <label class="admin-label">Article Slug ID (e.g. essay-railway, dispatch-002)</label>
-        <input type="text" id="admin-id" class="admin-input" placeholder="essay-sample-topic">
-      </div>
-
-      <div class="admin-input-group">
-        <label class="admin-label">Meta Line (e.g. ESSAY #004 // 7 MIN READ • NOV 2026 • INFRASTRUCTURE)</label>
-        <input type="text" id="admin-meta" class="admin-input" placeholder="ESSAY #004 // 7 MIN READ • OCTOBER 2026 • SECTOR">
-      </div>
-
-      <div class="admin-input-group">
-        <label class="admin-label">Main Title</label>
-        <input type="text" id="admin-title" class="admin-input" placeholder="Enter headline...">
-      </div>
-
-      <div class="admin-input-group">
-        <label class="admin-label">Subtitle / Deck</label>
-        <input type="text" id="admin-subtitle" class="admin-input" placeholder="Executive summary of the thesis...">
-      </div>
-
-      <div class="admin-input-group">
-        <label class="admin-label">Article Body (Supports **bold**, *italic*, paragraphs, headers, and bullet points)</label>
-        <textarea id="admin-body" class="admin-textarea" placeholder="Write or paste your article markdown here..."></textarea>
-      </div>
-
-      <div class="admin-btn-row">
-        <button class="admin-btn admin-btn-primary" onclick="testPreviewArticle()">Test Live Preview</button>
-        <button class="admin-btn admin-btn-secondary" onclick="generateExportSnippet()">Copy Code Snippet</button>
-        <button class="admin-btn admin-btn-secondary" onclick="navigateTo('dispatches')">Exit Studio</button>
-      </div>
-    </section>
   </main>
+
+  <!-- PWA STANDALONE MOBILE BOTTOM APP BAR (Native App Feel on iOS & Android) -->
+  <nav class="mobile-app-bar">
+    <div class="mobile-app-item active" id="mob-app-dispatches" onclick="navigateTo('dispatches')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+      <span>News</span>
+    </div>
+    <div class="mobile-app-item" id="mob-app-essays" onclick="navigateTo('essays')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+      <span>Essays</span>
+    </div>
+    <div class="mobile-app-item" id="mob-app-tech" onclick="navigateTo('tech')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+      <span>Vault</span>
+    </div>
+    <div class="mobile-app-item" id="mob-app-manifesto" onclick="navigateTo('manifesto')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+      <span>Manifesto</span>
+    </div>
+  </nav>
+
+  <!-- PWA INSTALL INSTRUCTION MODAL -->
+  <div id="pwa-modal" class="pwa-modal" onclick="closePWAModal(event)">
+    <div class="pwa-modal-content" onclick="event.stopPropagation()">
+      <div class="pwa-modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <svg class="brand-glyph" viewBox="0 0 100 100" style="width:20px;height:20px;">
+            <rect width="100" height="100" rx="22" fill="var(--text-main)"/>
+            <polyline points="28,32 50,50 28,68" stroke="var(--bg-color)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="58" y1="68" x2="78" y2="68" stroke="var(--bg-color)" stroke-width="11" stroke-linecap="round"/>
+          </svg>
+          <strong style="font-family:var(--font-mono); font-size:11.5px; letter-spacing:1px; color:var(--text-main);">INSTALL TERMINAL APP</strong>
+        </div>
+        <button class="search-close" onclick="closePWAModal()">&times;</button>
+      </div>
+      <div style="font-size:13px; line-height:1.7; color:var(--text-muted); margin:14px 0;">
+        <p style="color:var(--text-main); margin-bottom:6px;"><strong>iPhone / iPad (iOS Safari):</strong></p>
+        <ol style="padding-left:18px; margin-bottom:14px;">
+          <li>Tap the <strong>Share</strong> button <span style="font-family:var(--font-mono);">[↑]</span> at the bottom of Safari.</li>
+          <li>Scroll down and tap <strong>"Add to Home Screen"</strong>.</li>
+          <li>Tap <strong>Add</strong> in the top-right corner.</li>
+        </ol>
+        <p style="color:var(--text-main); margin-bottom:6px;"><strong>Android / Chrome:</strong></p>
+        <p style="margin-bottom:10px;">Tap the browser menu <span style="font-family:var(--font-mono);">[⋮]</span> and select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</p>
+      </div>
+      <button class="back-btn" style="width:100%; justify-content:center; text-align:center;" onclick="closePWAModal()">DISMISS</button>
+    </div>
+  </div>
 
   <footer>
     <div>© 2026 The Terminal Project. Strictly non-commercial & public domain.</div>
-    <div>The Terminal Desk // Sovereign Signal</div>
+    <div>The Terminal Desk // Sovereign Signal & Engineering Vault</div>
   </footer>
 
   <script>
     let activeTab = 'dispatches';
     let currentOrigin = 'dispatches';
     let currentArticleId = '';
+    let currentDocId = '';
 
-    // Articles Database
+    // ========================================================
+    // COMPLETE ARTICLES DATABASE (ZERO CUT CONTENT)
+    // ========================================================
     const articles = {
       'dispatch-001': {
         origin: 'dispatches',
@@ -1044,35 +1696,400 @@
       },
       'essay-aging': {
         origin: 'essays',
-        meta: 'ESSAY #001 // 8 MIN READ • OCTOBER 2026 • MACRO-SOCIOLOGY',
-        title: 'The Silent Business of Aging: Inside the Commercialization of Indian Elder Care',
-        subtitle: 'Why traditional intergenerational family pacts in India are structurally collapsing, how real-estate developers are financializing loneliness, and the hidden economic arithmetic of the senior living boom.',
+        meta: 'ESSAY #001 // 12 MIN READ • HIGH-IMPACT DOSSIER • OCTOBER 2026 • MACRO-DEMOGRAPHICS',
+        title: 'The Silent Business of Aging: Inside the Commercialization & Crisis of Indian Elder Care',
+        subtitle: 'Side-by-Side Reality Comparisons, the 24-Year-Old Life Simulation at ₹30,000/Month, and the Tactical Survival Roadmap for Indian Families.',
         html: `
-          <p>
-            In the traditional Indian social contract, elder care was never an outsourced commodity; it was an unbreakable intergenerational pact. Parents invested their prime reproductive and economic surplus into their children; in return, children provided domestic co-habitation and end-of-life care.
-          </p>
-          <p>
-            Over the last fifteen years, this civilizational architecture has experienced structural collapse—driven by three unstoppable macroeconomic vectors:
-          </p>
-          <h2>1. The Geography of Economic Specialization</h2>
-          <p>
-            High-value knowledge work (software engineering, quantitative finance, corporate consulting) is geographically concentrated in four metropolitan islands: Bangalore, Hyderabad, Pune, and Gurgaon—or abroad in the Gulf, North America, and Europe. An engineering graduate from Kerala, UP, or Bihar cannot practice high-level chip design or distributed systems in their hometown. Nuclear outward migration is not a moral failure; it is an economic necessity.
-          </p>
-          <h2>2. The Financialization of Geriatric Living</h2>
-          <p>
-            Real estate developers and private equity funds have recognized the demographic shift. Senior living communities in Coimbatore, Dehradun, and Kochi are no longer framed as stigmatized "charity homes." They are packaged as ₹60,000 to ₹1.5 Lakh/month luxury gated enclaves with geriatric nurses, biometric health monitoring, and communal dining.
-          </p>
-          <blockquote>
-            "The modern old-age home is not an anomaly; it is the natural market response to the collision of metropolitan real-estate constraints (500 sq ft apartments) and the global remittance economy."
-          </blockquote>
-          <p>
-            The children send monthly bank transfers from Dubai or Seattle to clear the facility invoice. The financial transaction is completed flawlessly. The biological relationship is liquidated into an automated subscription.
-          </p>
-          <h2>3. The Macroeconomic Consequence</h2>
-          <p>
-            When family structures atomize, senior citizens become purely economic units. Their primary assets—ancestral family land and gold—are sold off to fund monthly geriatric care fees. The intergenerational transmission of family wealth is interrupted, and private healthcare conglomerates absorb the generational surplus of the Indian middle class.
-          </p>
-        `
+<div class="tldr-box">
+  <div class="tldr-title">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+    <span>EXECUTIVE BRIEF // THE 60-SECOND TL;DR</span>
+  </div>
+  <ul class="tldr-list">
+    <li><span class="bullet">•</span> <div><strong>The 2050 Demographic Surge:</strong> India has 149 million seniors today. By 2050, that number explodes to <strong>347 million (1 in 5 Indians)</strong>. In 2046, elders (60+) will officially outnumber children for the first time in Indian history.</div></li>
+    <li><span class="bullet">•</span> <div><strong>The Bed Deficit:</strong> India has only <strong>~1,200 organized old age homes (~97,000 beds)</strong> for 149 million seniors. That covers less than <strong>0.07%</strong> of the elderly population. 99.9% have zero institutional fallback.</div></li>
+    <li><span class="bullet">•</span> <div><strong>The Geographic Bias:</strong> Over <strong>55% of all senior facilities</strong> are concentrated in the South (Kerala, TN, Karnataka) plus Maharashtra. Kerala alone has 600+ homes due to heavy Gulf emigration. The northern Hindi belt (UP, Bihar, MP) is an institutional desert with fewer than 110 homes for 48M elders.</div></li>
+    <li><span class="bullet">•</span> <div><strong>The Real-World Cost Divide:</strong> Entry-level retirement living in Coimbatore costs <strong>₹35L–₹85L entry + ₹16,000–₹30,000/mo</strong>. In Gurgaon, specialized memory/dementia care costs <strong>₹1.2Cr–₹3.5Cr entry + ₹65,000–₹1,35,000/mo</strong>. Free government/NGO homes exist, but carry 8 to 22-month waiting lists.</div></li>
+    <li><span class="bullet">•</span> <div><strong>The Home Care Fallacy:</strong> Keeping a bedridden parent at home with 24/7 private attendants and medical gear costs <strong>₹66,000 to ₹1,20,000/mo out-of-pocket</strong>—often more expensive than structured assisted living, with a brutal 65% quarterly attendant turnover.</div></li>
+    <li><span class="bullet">•</span> <div><strong>The ₹30k/mo Reality Check:</strong> If you are 24 earning ₹30k/mo, doing nothing today guarantees financial destruction at age 35 when parental stroke, fracture, or dementia hits with an un-insured ₹60k/month bill.</div></li>
+  </ul>
+</div>
+
+<p class="prose-lead">
+  For generations, India had an unspoken social pact: parents sacrificed everything to raise their children, and children took care of their parents in old age. That pact is now dead.
+</p>
+<p>
+  Over the last fifteen years, economic reality has shattered the traditional Indian joint family. In its place is an expensive, unregulated commercial market where real estate developers, private equity firms, and underfunded charities are scrambling to manage India’s rapidly growing elderly population.
+</p>
+
+<h2>PART I: SIDE-BY-SIDE REALITY COMPARISONS (LEFT VS. RIGHT)</h2>
+<p>
+  To understand why the Indian elder care system is breaking down, compare the cultural expectations against the hard economic realities:
+</p>
+
+<!-- COMPARISON 1: CULTURAL FANTASY VS ECONOMIC REALITY -->
+<div class="compare-grid">
+  <div class="compare-card">
+    <div class="compare-header">
+      <span>THE CULTURAL FANTASY</span>
+      <span class="compare-badge">TRADITIONAL BELIEF</span>
+    </div>
+    <ul>
+      <li><strong>"Children stay home":</strong> Sons and daughters are expected to live in the ancestral family house and manage daily care.</li>
+      <li><strong>"Unpaid family nursing":</strong> Daughters and daughters-in-law handle round-the-clock bathing, feeding, and medical supervision at zero cash cost.</li>
+      <li><strong>"Moral superiority":</strong> Society praises multi-generational living and labels old age homes as a "Western sin" and "parental abandonment."</li>
+      <li><strong>"Family self-sufficiency":</strong> The assumption that family warmth can replace professional medical nursing and palliative equipment.</li>
+    </ul>
+  </div>
+
+  <div class="compare-card highlight">
+    <div class="compare-header">
+      <span>THE ECONOMIC REALITY</span>
+      <span class="compare-badge">ON-THE-GROUND TRUTH</span>
+    </div>
+    <ul>
+      <li><strong>Knowledge Economy Migration:</strong> High-value careers are locked in Bengaluru, Hyderabad, Gurgaon, or abroad. Children must leave hometowns to earn a living.</li>
+      <li><strong>The "Golden Cage" Problem:</strong> Seniors living in 800 sq ft city flats spend 12 hours a day in solitary isolation while working kids commute and grandkids study.</li>
+      <li><strong>The Daughter-in-Law Tax:</strong> 78% of informal care falls on women, forcing premature career exits, wiping out 15 years of PF compounding, and causing bitter domestic friction.</li>
+      <li><strong>Emergency Hospice Trap:</strong> Because of stigma, families wait until stage-5 Alzheimer's or paralysis before seeking care, turning homes into emergency mental hospices.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- COMPARISON 2: HOME ICU VS ASSISTED LIVING -->
+<div class="compare-grid">
+  <div class="compare-card">
+    <div class="compare-header">
+      <span>24/7 HOME ICU CARE</span>
+      <span class="compare-badge">UNORGANIZED / IN-SITU</span>
+    </div>
+    <ul>
+      <li><strong>Monthly Cost:</strong> <strong>₹66,000 – ₹1,20,000 / month</strong> (Two 12-hr attendants @ ₹45k, diapers @ ₹10k, ICU bed/concentrator @ ₹10k, physio @ ₹15k).</li>
+      <li><strong>Staff Reliability:</strong> <strong>65% quarterly turnover rate.</strong> Unscreened agency workers vanish without notice; zero training in bedsores or catheter hygiene.</li>
+      <li><strong>Psychological Friction:</strong> Family members live in chronic terror of attendants leaving; caregiver fatigue drives <strong>35.2% of domestic elder abuse</strong>.</li>
+      <li><strong>Insurance Coverage:</strong> <strong>0% covered.</strong> Standard retail mediclaim policies strictly exclude outpatient pharmaceuticals, adult diapers, and home nursing.</li>
+    </ul>
+  </div>
+
+  <div class="compare-card highlight">
+    <div class="compare-header">
+      <span>MANAGED ASSISTED LIVING</span>
+      <span class="compare-badge">STRUCTURED FACILITY</span>
+    </div>
+    <ul>
+      <li><strong>Monthly Cost:</strong> <strong>₹22,000 – ₹50,000 / month</strong> in Tier-2 hubs (Coimbatore, Pune). All-inclusive meals, nursing, vitals telemetry, and housekeeping.</li>
+      <li><strong>Clinical Stability:</strong> 24/7 on-site resident doctors, dedicated nursing shifts, wheelchair ramps, oxygen lines, and emergency ambulance bays on campus.</li>
+      <li><strong>Social Health:</strong> Daily peer interaction, library, walking gardens, dining clubs. Eliminates the cognitive rot of sitting alone in an empty city apartment.</li>
+      <li><strong>Family Relationship:</strong> Children visit on weekends as loving family rather than resentful, sleep-deprived nurses changing adult diapers.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- COMPARISON 3: BUDGET HUB VS LUXURY METRO -->
+<div class="compare-grid">
+  <div class="compare-card">
+    <div class="compare-header">
+      <span>COIMBATORE (TIER-2 HUB)</span>
+      <span class="compare-badge">RETIREMENT CAPITAL</span>
+    </div>
+    <ul>
+      <li><strong>Capital Entry:</strong> <strong>₹35 Lakhs – ₹85 Lakhs</strong> (Freehold 1/2 BHK flat or cottage villa).</li>
+      <li><strong>Monthly Dues:</strong> <strong>₹16,000 – ₹30,000 / month</strong> per couple for dining, security, and primary health monitoring.</li>
+      <li><strong>Infrastructure:</strong> Low land prices, clean air, zero seismic activity, immediate access to world-class hospital hubs (PSG, Kovai Medical, Ganga).</li>
+      <li><strong>Operators:</strong> Covai Care (Soundaryam), Vedaanta Senior Living, Serene Communities.</li>
+    </ul>
+  </div>
+
+  <div class="compare-card highlight">
+    <div class="compare-header">
+      <span>GURGAON / NCR (TIER-1 METRO)</span>
+      <span class="compare-badge">HIGH-END CLINICAL</span>
+    </div>
+    <ul>
+      <li><strong>Capital Entry:</strong> <strong>₹1.20 Crores – ₹3.50 Crores</strong> purchase, OR Rental model with ₹10L–₹20L refundable security deposit.</li>
+      <li><strong>Monthly Dues:</strong> <strong>₹65,000 – ₹1,35,000 / month</strong> for specialized high-dependency assisted living and locked memory care.</li>
+      <li><strong>Infrastructure:</strong> 1:1 nurse ratios, intensive post-stroke rehab, specialized Alzheimer’s architecture. Backed by Max Healthcare network.</li>
+      <li><strong>Operators:</strong> Antara Senior Care (Max Group), Epoch Elder Care, The Golden Estate.</li>
+    </ul>
+  </div>
+</div>
+
+<h2>PART II: THE LIFE SIMULATION (A 24-YEAR-OLD STARTING AT ₹30,000/MONTH)</h2>
+<p>
+  To make this concrete, imagine a realistic scenario that millions of young Indian professionals will face over the next fifteen years:
+</p>
+<blockquote>
+  "You are 24 years old. You just landed a software or corporate job in Bengaluru or Gurgaon earning ₹30,000 a month. Your parents are 55 and 52 back in your hometown. They seem healthy. What happens if you do nothing, and what is your survival roadmap?"
+</blockquote>
+
+<h3>The 4-Phase Crash Timeline (If You Have No Plan):</h3>
+
+<div class="roadmap-timeline">
+  <!-- PHASE 1 -->
+  <div class="roadmap-step">
+    <div class="roadmap-phase-title">Phase 1: Age 24–27 // The False Sense of Security</div>
+    <div class="roadmap-card">
+      <div class="roadmap-meta">
+        <span>YOUR SALARY: ₹30,000 – ₹45,000/MO</span>
+        <span>PARENTS' AGE: 55 – 58</span>
+        <span>STATUS: ACTIVE & WORKING</span>
+      </div>
+      <p>Your parents are working or active. They take care of themselves. You spend your salary on rent, socializing, gadgets, and bike EMIs. You think: <em>"My parents are fine. Aging is something that happens in movies."</em></p>
+      <p><strong>The Silent Trap:</strong> This is the <strong>only 3-year window</strong> when parental health insurance is affordable, and before diabetes or hypertension locks them out of retail coverage.</p>
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="roadmap-step">
+    <div class="roadmap-phase-title">Phase 2: Age 28–32 // The First Warning Cracks</div>
+    <div class="roadmap-card">
+      <div class="roadmap-meta">
+        <span>YOUR SALARY: ₹65,000 – ₹85,000/MO</span>
+        <span>PARENTS' AGE: 59 – 63</span>
+        <span>STATUS: RETIREMENT & CHRONIC ACHES</span>
+      </div>
+      <p>Your father retires with a modest PF/gratuity lump sum of ₹25 Lakhs. Your mother develops knee osteoarthritis and high blood pressure. Bank fixed deposit interest rates drop.</p>
+      <ul>
+        <li>Monthly outpatient medicines start at <strong>₹5,000 to ₹8,000/month</strong>.</li>
+        <li>You start sending ₹10,000 to ₹15,000/month back home to help.</li>
+        <li>You are planning your own wedding or saving for a house down payment. Financial friction begins.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="roadmap-step">
+    <div class="roadmap-phase-title">Phase 3: Age 33–37 // The Sudden Medical Ambush</div>
+    <div class="roadmap-card">
+      <div class="roadmap-meta">
+        <span>YOUR SALARY: ₹1,15,000/MO</span>
+        <span>PARENTS' AGE: 64 – 68</span>
+        <span>STATUS: ACUTE EVENT & HOSPITALIZATION</span>
+      </div>
+      <p>You now have a spouse, a 3-year-old child, a home loan EMI (₹38,000), and preschool fees (₹12,000). Your household fixed commitments are ₹75,000/month.</p>
+      <p><strong>The Event:</strong> Your father (66) suffers an ischemic stroke or a bathroom slip resulting in a fractured femur. Emergency hospitalization and surgery cost <strong>₹4.5 Lakhs</strong>.</p>
+      <ul>
+        <li>If you never bought insurance at age 24, pre-existing conditions mean the claim is rejected.</li>
+        <li>You burn 50% of your father's remaining retirement savings in 12 days.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="roadmap-step">
+    <div class="roadmap-phase-title">Phase 4: Age 38–42 // The Terminal Care Collapse</div>
+    <div class="roadmap-card">
+      <div class="roadmap-meta">
+        <span>YOUR SALARY: ₹1,65,000/MO</span>
+        <span>PARENTS' AGE: 69 – 73</span>
+        <span>STATUS: BEDRIDDEN & INCONTINENCE</span>
+      </div>
+      <p>Your father is semi-bedridden with vascular dementia and catheter dependency. Your mother (70) has chronic spinal issues and physically cannot lift him.</p>
+      <ul>
+        <li>Two 12-hour home attendants cost <strong>₹50,000/month</strong>.</li>
+        <li>Diapers, catheter bags, and medications cost <strong>₹15,000/month</strong>.</li>
+        <li>Total monthly out-of-pocket cash burn: <strong>₹65,000 to ₹75,000 every single month</strong>.</li>
+        <li><strong>The Crash:</strong> Your monthly salary surplus is completely erased. You are trapped between your corporate job in Bengaluru and your exhausted mother back home.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<h2>PART III: THE TACTICAL SURVIVAL ROADMAP (5 RULES FOR THE 24-YEAR-OLD)</h2>
+<p>
+  If you are in your 20s or early 30s earning a starter salary, here is the exact financial and legal checklist you must execute to protect both your parents and your future family:
+</p>
+
+<!-- TACTICAL RULE 1 -->
+<div class="compare-card highlight" style="margin-bottom: 16px;">
+  <div class="compare-header">
+    <span>RULE 1: THE "SUPER TOP-UP" INSURANCE HACK</span>
+    <span class="compare-badge">EXECUTE AT AGE 24–26</span>
+  </div>
+  <p><strong>The Mistake:</strong> Trying to buy a ₹25 Lakh base health policy that costs ₹4,500/month (unaffordable on a ₹30k salary), or relying solely on company insurance that disappears if you switch jobs.</p>
+  <p><strong>The Action:</strong> Keep a basic ₹3L–₹5L base policy + buy a <strong>₹20 Lakh to ₹25 Lakh Super Top-Up policy with a ₹5 Lakh deductible</strong>.</p>
+  <ul>
+    <li><strong>The Cost:</strong> Costs only <strong>₹1,100 to ₹1,600 / month</strong> (the price of one weekend restaurant meal).</li>
+    <li><strong>Why:</strong> If a catastrophic ₹12 Lakh surgery hits, the base covers the first ₹5L, and the Super Top-Up pays the remaining ₹7L without touching your savings.</li>
+    <li><strong>Crucial:</strong> You MUST lock this in before parents turn 58 and before they are diagnosed with diabetes or hypertension.</li>
+  </ul>
+</div>
+
+<!-- TACTICAL RULE 2 -->
+<div class="compare-card highlight" style="margin-bottom: 16px;">
+  <div class="compare-header">
+    <span>RULE 2: THE UNTOUCHABLE "OPD & CAREGIVER" SINKING FUND</span>
+    <span class="compare-badge">MONTHLY DISCIPLINE</span>
+  </div>
+  <p><strong>The Mistake:</strong> Assuming health insurance covers elder care. Health insurance pays <strong>₹0 for daily blood pressure pills, adult diapers, and home nursing attendants</strong>.</p>
+  <p><strong>The Action:</strong> Open a separate, dedicated mutual fund SIP of <strong>₹2,000 / month</strong> (just 6.6% of your ₹30k salary) into a conservative hybrid or index fund.</p>
+  <ul>
+    <li><strong>The Math:</strong> Compounded at 11% over 14 years (by the time you are 38 and parents are 69), this builds a <strong>₹7.5 Lakh to ₹9.0 Lakh liquid cash cushion</strong>.</li>
+    <li><strong>Why:</strong> When attendant bills of ₹50k/month hit in your late 30s, this sinking fund absorbs the shock so you don't liquidate your child's college fund.</li>
+  </ul>
+</div>
+
+<!-- TACTICAL RULE 3 -->
+<div class="compare-card highlight" style="margin-bottom: 16px;">
+  <div class="compare-header">
+    <span>RULE 3: AUDIT ANCESTRAL PROPERTY PAPERS BEFORE AGE 28</span>
+    <span class="compare-badge">LEGAL HYGIENE</span>
+  </div>
+  <p><strong>The Mistake:</strong> Ignoring family property titles until parents are in an ICU. 80%+ of elderly wealth is trapped in ancestral land, but title disputes freeze it completely.</p>
+  <p><strong>The Action:</strong> Sit down with your parents while they are lucid and healthy:</p>
+  <ul>
+    <li><strong>Name Verification:</strong> Ensure property deeds match Aadhaar and PAN spellings exactly.</li>
+    <li><strong>Execute a Registered Will:</strong> Register it at the Sub-Registrar office with two non-family witnesses (an informal diary note is legally useless).</li>
+    <li><strong>Medical Power of Attorney (POA):</strong> Draft a durable POA authorizing you to make medical and banking transactions if cognitive decline occurs. Without this, banks legally freeze accounts during dementia.</li>
+  </ul>
+</div>
+
+<!-- TACTICAL RULE 4 -->
+<div class="compare-card highlight" style="margin-bottom: 16px;">
+  <div class="compare-header">
+    <span>RULE 4: IDENTIFY TWO TIER-2 CARE OPTIONS EARLY</span>
+    <span class="compare-badge">AVOID PANIC SEARCHES</span>
+  </div>
+  <p><strong>The Mistake:</strong> Waiting for a 2:00 AM hospital stroke emergency to google "old age homes near me." You end up in an expensive, exploitative facility.</p>
+  <p><strong>The Action:</strong> When parents reach 62–65, visit and research 2–3 structured facilities in affordable hubs like Coimbatore, peripheral Pune, or Kerala.</p>
+  <ul>
+    <li>Learn their entry deposit rules, monthly fee schedules, and doctor-on-call protocols.</li>
+    <li>Have the honest, non-judgmental family conversation early: frame senior living not as "abandonment," but as a vibrant, safe community with on-site doctors and active peers.</li>
+  </ul>
+</div>
+
+<!-- TACTICAL RULE 5 -->
+<div class="compare-card highlight">
+  <div class="compare-header">
+    <span>RULE 5: DRAFT A TRANSPARENT SIBLING CONTRACT</span>
+    <span class="compare-badge">FAMILY CLARITY</span>
+  </div>
+  <p><strong>The Mistake:</strong> Relying on vague emotional assumptions that siblings will "figure it out when the time comes."</p>
+  <p><strong>The Action:</strong> Agree on a transparent parental care agreement:</p>
+  <ul>
+    <li>Set up an automated monthly joint bank transfer specifically for parental maintenance.</li>
+    <li>Ensure the sibling living in the hometown isn't forced to bear 100% of the physical nursing while out-of-town siblings do nothing.</li>
+  </ul>
+</div>
+
+<h2>PART IV: HARD MACRO NUMBERS & CENSUS CITATIONS</h2>
+<p>
+  For those who need the verified institutional data, here is the macroeconomic census:
+</p>
+
+<table class="tech-table">
+  <thead>
+    <tr>
+      <th>Demographic Metric</th>
+      <th>2022 Baseline</th>
+      <th>2031 Projected</th>
+      <th>2036 Projected</th>
+      <th>2050 Projected</th>
+      <th>Source</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Total Elderly Population (60+)</strong></td>
+      <td>149.2 Million</td>
+      <td>193.4 Million</td>
+      <td>227.4 Million</td>
+      <td>347.0 Million</td>
+      <td>UNFPA / IIPS / Census Tech Group</td>
+    </tr>
+    <tr>
+      <td><strong>Share of Total Population</strong></td>
+      <td>10.5%</td>
+      <td>13.1%</td>
+      <td>15.0%</td>
+      <td>20.8% (1 in 5 Indians)</td>
+      <td>UNFPA India Ageing Report 2023</td>
+    </tr>
+    <tr>
+      <td><strong>The "Oldest Old" (80+ Cohort)</strong></td>
+      <td>11.2 Million</td>
+      <td>16.8 Million</td>
+      <td>22.5 Million</td>
+      <td>42.5 Million (+279% surge)</td>
+      <td>LASI Wave-1 / MoHFW</td>
+    </tr>
+    <tr>
+      <td><strong>Total Old Age Homes in India</strong></td>
+      <td colspan="4"><strong>~1,150 to 1,200 organized facilities</strong> (~97,000 total beds). Covers <strong>0.065%</strong> of national elderly demand.</td>
+      <td>Tata Trusts / HelpAge India</td>
+    </tr>
+    <tr>
+      <td><strong>Reverse Mortgage Loans (17 Years)</strong></td>
+      <td colspan="4"><strong>Under 25,000 loans sanctioned nationwide</strong> due to cultural inheritance taboo and banking litigation fears.</td>
+      <td>National Housing Bank (NHB)</td>
+    </tr>
+    <tr>
+      <td><strong>Ayushman Bharat 70+ Blindspot</strong></td>
+      <td colspan="4">Covers acute hospital beds; <strong>0% cover for daily OPD drugs, 0% for old age homes, 18% GST penalty</strong> on senior care.</td>
+      <td>National Health Authority (NHA)</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MONOCHROME DEMOGRAPHIC PROJECTION SVG GRAPH -->
+<div class="code-container" style="padding: 16px; background: var(--card-bg); margin: 26px 0;">
+  <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 1px;">
+    FIGURE 1.1: PROJECTED EXPANSION OF INDIA'S ELDERLY POPULATION (MILLIONS OF CITIZENS AGED 60+) // 2022–2050
+  </div>
+  <svg viewBox="0 0 700 240" style="width: 100%; height: auto; font-family: var(--font-mono);">
+    <line x1="50" y1="20" x2="50" y2="200" stroke="var(--border)" stroke-width="1.5" />
+    <line x1="50" y1="200" x2="680" y2="200" stroke="var(--border)" stroke-width="1.5" />
+    
+    <line x1="50" y1="160" x2="680" y2="160" stroke="var(--border)" stroke-dasharray="3,3" opacity="0.5" />
+    <text x="40" y="164" fill="var(--text-dim)" font-size="9" text-anchor="end">100M</text>
+    
+    <line x1="50" y1="120" x2="680" y2="120" stroke="var(--border)" stroke-dasharray="3,3" opacity="0.5" />
+    <text x="40" y="124" fill="var(--text-dim)" font-size="9" text-anchor="end">200M</text>
+    
+    <line x1="50" y1="80" x2="680" y2="80" stroke="var(--border)" stroke-dasharray="3,3" opacity="0.5" />
+    <text x="40" y="84" fill="var(--text-dim)" font-size="9" text-anchor="end">300M</text>
+
+    <path d="M 90 148 Q 230 130, 370 108 T 630 35" fill="none" stroke="var(--text-main)" stroke-width="2.5" />
+
+    <circle cx="90" cy="148" r="4.5" fill="var(--bg-color)" stroke="var(--text-main)" stroke-width="2" />
+    <text x="90" y="136" fill="var(--text-main)" font-size="10" font-weight="bold" text-anchor="middle">149.2M</text>
+    <text x="90" y="218" fill="var(--text-muted)" font-size="9.5" text-anchor="middle">2022 (10.5%)</text>
+
+    <circle cx="230" cy="130" r="4.5" fill="var(--bg-color)" stroke="var(--text-main)" stroke-width="2" />
+    <text x="230" y="118" fill="var(--text-main)" font-size="10" font-weight="bold" text-anchor="middle">193.4M</text>
+    <text x="230" y="218" fill="var(--text-muted)" font-size="9.5" text-anchor="middle">2031 (13.1%)</text>
+
+    <circle cx="370" cy="108" r="4.5" fill="var(--bg-color)" stroke="var(--text-main)" stroke-width="2" />
+    <text x="370" y="96" fill="var(--text-main)" font-size="10" font-weight="bold" text-anchor="middle">227.4M</text>
+    <text x="370" y="218" fill="var(--text-muted)" font-size="9.5" text-anchor="middle">2036 (15.0%)</text>
+
+    <circle cx="510" cy="70" r="3.5" fill="var(--text-dim)" stroke="var(--text-main)" stroke-width="1.5" />
+    <text x="510" y="58" fill="var(--text-dim)" font-size="9" text-anchor="middle">[2046: Crossover]</text>
+    <text x="510" y="218" fill="var(--text-dim)" font-size="9.5" text-anchor="middle">2046</text>
+
+    <circle cx="630" cy="35" r="5" fill="var(--text-main)" stroke="var(--bg-color)" stroke-width="2" />
+    <text x="630" y="24" fill="var(--text-main)" font-size="10.5" font-weight="bold" text-anchor="middle">347.0M</text>
+    <text x="630" y="218" fill="var(--text-muted)" font-size="9.5" text-anchor="middle">2050 (20.8%)</text>
+  </svg>
+  <div style="font-family: var(--font-mono); font-size: 9.5px; color: var(--text-dim); margin-top: 8px; border-top: 1px solid var(--border); padding-top: 6px;">
+    DATA COMPILED FROM UNFPA INDIA AGEING REPORT 2023 & IIPS TECHNICAL PROJECTIONS.
+  </div>
+</div>
+
+<h2>OFFICIAL CITATIONS & REFERENCES</h2>
+<div class="code-container" style="background: var(--code-bg); padding: 18px 20px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.8;">
+  <div style="font-weight: 700; color: var(--text-main); margin-bottom: 10px; letter-spacing: 1px;">PRIMARY INSTITUTIONAL DATA SOURCES:</div>
+  <ol style="padding-left: 20px; color: var(--text-muted);">
+    <li><strong style="color:var(--text-main);">UNFPA India & IIPS Mumbai (2023):</strong> <em>India Ageing Report 2023: Caring for Our Elders – Institutional Responses</em>.</li>
+    <li><strong style="color:var(--text-main);">Ministry of Health and Family Welfare (2020):</strong> <em>Longitudinal Ageing Study in India (LASI) Wave-1 India Report</em>.</li>
+    <li><strong style="color:var(--text-main);">Tata Trusts & Samarth Elder Care (2021):</strong> <em>Elderly Housing in India: Challenges, Models, and Policy Imperatives</em>.</li>
+    <li><strong style="color:var(--text-main);">HelpAge India (2024):</strong> <em>The State of Elderly in India 2024: Aging, Elder Abuse, and Caregiver Disintegration</em>.</li>
+    <li><strong style="color:var(--text-main);">National Commission on Population, MoHFW (2020):</strong> <em>Report of the Technical Group on Population Projections (2011–2036)</em>.</li>
+    <li><strong style="color:var(--text-main);">ASLI & CBRE India (2023):</strong> <em>Senior Living in India: Growth Drivers and Unit Economics</em>.</li>
+    <li><strong style="color:var(--text-main);">National Housing Bank (NHB) Reports (2007–2023):</strong> Reverse Mortgage Scheme performance benchmarks.</li>
+  </ol>
+</div>
+`
       },
       'essay-debt': {
         origin: 'essays',
@@ -1129,58 +2146,365 @@
       }
     };
 
-    // Robust Markdown Helper (Bold, Italic, Code, Paragraphs)
+    // ========================================================
+    // TECH VAULT DIRECTORY TREE (PURE MONOCHROME SVG ONLY)
+    // ========================================================
+    const techRepository = {
+      name: "ROOT",
+      type: "folder",
+      children: [
+        {
+          name: "01_PLC_AND_AUTOMATION",
+          type: "folder",
+          children: [
+            {
+              name: "Siemens_S7_1200",
+              type: "folder",
+              children: [
+                {
+                  id: "s7-memory",
+                  name: "Memory_Architecture_and_Addressing.md",
+                  type: "file",
+                  meta: "PLC ARCHITECTURE • TIA PORTAL V18 • S7-1200 CPU 1214C",
+                  title: "Siemens S7-1200 Memory Model & DB Bit Addressing",
+                  content: `
+                    <h2>1. Primary Memory Divisions in S7-1200</h2>
+                    <p>Unlike standard microcontroller RAM, Siemens SIMATIC architecture isolates process image memory from internal work blocks to ensure atomic scan-cycle execution.</p>
+                    
+                    <table class="tech-table">
+                      <tr><th>Memory Identifier</th><th>Description</th><th>Typical Size / Range</th><th>Persistence</th></tr>
+                      <tr><td><strong>I (Process Image Input)</strong></td><td>Buffered hardware input values (e.g., %I0.0 to %I1.7)</td><td>1024 Bytes</td><td>Updated start of scan cycle</td></tr>
+                      <tr><td><strong>Q (Process Image Output)</strong></td><td>Buffered coil states sent to physical relays (%Q0.0)</td><td>1024 Bytes</td><td>Updated end of scan cycle</td></tr>
+                      <tr><td><strong>M (Bit Memory / Flags)</strong></td><td>Internal marker flags for intermediate logic (%M10.2)</td><td>8192 Bytes</td><td>Configurable non-volatile</td></tr>
+                      <tr><td><strong>DB (Data Blocks)</strong></td><td>User-structured variables, arrays, and UDT payloads</td><td>Up to 100 KB</td><td>Retentive attribute enabled</td></tr>
+                    </table>
+
+                    <h2>2. Scan-Cycle Execution Sequence</h2>
+                    <p>The cyclic scan follows strict deterministic timing:</p>
+                    <ul>
+                      <li><strong>Step 1:</strong> Read physical hardware inputs into Process Image Input (PII).</li>
+                      <li><strong>Step 2:</strong> Execute Main Organization Block (OB1) and called Function Blocks (FB/FC).</li>
+                      <li><strong>Step 3:</strong> Write result registers to Process Image Output (PIQ).</li>
+                      <li><strong>Step 4:</strong> Diagnostics, comms handling (PROFINET / Modbus TCP), and cycle watchdog check.</li>
+                    </ul>
+
+                    <h2>3. Direct Peripheral Addressing (%IW:P vs %I)</h2>
+                    <p>To read a high-speed analog thermocouple without waiting for the cyclic scan update, append <code>:P</code> (Peripheral):</p>
+                    
+                    <div class="code-container">
+                      <div class="code-header">
+                        <span>STRUCTURED TEXT // IMMEDIATE PERIPHERAL ACCESS</span>
+                        <button class="code-copy-btn" onclick="copySnippet(this)">COPY</button>
+                      </div>
+                      <pre class="code-body">// Structured Text (SCL) Example:
+#RawCurrent := "%IW64:P"; // Immediate hardware read bypasses Process Image</pre>
+                    </div>
+                  `
+                },
+                {
+                  id: "s7-timers",
+                  name: "Ladder_Logic_Timers_TON_TOF.md",
+                  type: "file",
+                  meta: "LADDER LOGIC (LAD) • TIMERS • IEC STANDARD",
+                  title: "Deterministic Timer Logic: TON vs TOF vs TP",
+                  content: `
+                    <h2>1. Timer Function Block Comparison</h2>
+                    <p>In industrial automation, hardware relays can fail due to chatter. Software timers in the IEC 61131-3 standard eliminate race conditions.</p>
+
+                    <table class="tech-table">
+                      <tr><th>Instruction</th><th>Name</th><th>Input (IN) True Behavior</th><th>Input (IN) False Behavior</th></tr>
+                      <tr><td><strong>TON</strong></td><td>On-Delay Timer</td><td>Begins timing; Q goes TRUE after preset time (PT).</td><td>Instantly resets ET to 0 and Q to FALSE.</td></tr>
+                      <tr><td><strong>TOF</strong></td><td>Off-Delay Timer</td><td>Q is immediately TRUE; no timing yet.</td><td>Starts timing; Q drops FALSE after preset time (PT).</td></tr>
+                      <tr><td><strong>TP</strong></td><td>Pulse Timer</td><td>Q pulses TRUE for exact duration PT regardless of IN.</td><td>No effect while pulse is active.</td></tr>
+                    </table>
+
+                    <h2>2. SCL Implementation: Motor Staggered Start</h2>
+                    <p>To prevent grid surge when firing 3-phase induction motors, use a sequential TON chain:</p>
+                    
+                    <div class="code-container">
+                      <div class="code-header">
+                        <span>SCL // MOTOR SEQUENTIAL STAGGER</span>
+                        <button class="code-copy-btn" onclick="copySnippet(this)">COPY</button>
+                      </div>
+                      <pre class="code-body">// SCL Delay Chain Implementation
+#TON_Motor1(IN := #StartPB AND NOT #StopPB, PT := T#0S);
+#Motor1_Run := #TON_Motor1.Q;
+
+#TON_Motor2(IN := #Motor1_Run, PT := T#5S); // 5 sec stagger
+#Motor2_Run := #TON_Motor2.Q;</pre>
+                    </div>
+                  `
+                }
+              ]
+            },
+            {
+              name: "Industrial_Protocols",
+              type: "folder",
+              children: [
+                {
+                  id: "modbus-protocol",
+                  name: "Modbus_TCP_vs_RTU_CheatSheet.md",
+                  type: "file",
+                  meta: "INDUSTRIAL NETWORKS • RS-485 • MODBUS PROTOCOL",
+                  title: "Modbus Protocol Architecture: Registers & Function Codes",
+                  content: `
+                    <h2>1. Register Types & Function Codes</h2>
+                    <p>Every sensor, energy meter, and PLC node maps memory into four standardized register banks:</p>
+                    <table class="tech-table">
+                      <tr><th>Register Bank</th><th>Address Prefix</th><th>Access</th><th>Function Code</th></tr>
+                      <tr><td>Discrete Inputs</td><td>10001 - 19999</td><td>Read-Only (1-bit)</td><td>FC02 (Read Discrete Inputs)</td></tr>
+                      <tr><td>Coils</td><td>00001 - 09999</td><td>Read/Write (1-bit)</td><td>FC01 (Read), FC05 (Write Single)</td></tr>
+                      <tr><td>Input Registers</td><td>30001 - 39999</td><td>Read-Only (16-bit)</td><td>FC04 (Read Input Registers)</td></tr>
+                      <tr><td>Holding Registers</td><td>40001 - 49999</td><td>Read/Write (16-bit)</td><td>FC03 (Read), FC06/FC16 (Write)</td></tr>
+                    </table>
+
+                    <h2>2. Physical RS-485 Differential Bus Termination</h2>
+                    <p>Always place a <strong>120Ω terminating resistor</strong> between lines <code>A (D-)</code> and <code>B (D+)</code> at both physical extremities of the bus cable to cancel transmission line reflections.</p>
+                  `
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "02_EMBEDDED_SYSTEMS",
+          type: "folder",
+          children: [
+            {
+              name: "STM32_ARM_Cortex",
+              type: "folder",
+              children: [
+                {
+                  id: "stm32-gpio",
+                  name: "GPIO_Register_Level_Configuration.md",
+                  type: "file",
+                  meta: "STM32F401RE • BARE-METAL C • CMSIS REGISTERS",
+                  title: "STM32 Bare-Metal GPIO Register-Level Driver",
+                  content: `
+                    <h2>1. Hardware Register Offset Mapping</h2>
+                    <p>Writing directly to memory-mapped registers bypasses HAL overhead, reducing GPIO toggle latency from 1.2 microseconds down to 14 nanoseconds (1 clock cycle).</p>
+                    
+                    <div class="code-container">
+                      <div class="code-header">
+                        <span>C // STM32 BARE-METAL REGISTER INIT</span>
+                        <button class="code-copy-btn" onclick="copySnippet(this)">COPY</button>
+                      </div>
+                      <pre class="code-body">#include "stm32f4xx.h"
+
+void GPIO_Init_BareMetal(void) {
+    // 1. Enable Clock for GPIOA in RCC AHB1 peripheral clock register
+    RCC->AHB1ENR |= (1 << 0); // Bit 0 = GPIOAEN
+
+    // 2. Configure PA5 (Onboard LED on Nucleo-F401RE) as General Purpose Output
+    // MODER: 00 = Input, 01 = Output, 10 = Alternate Function, 11 = Analog
+    GPIOA->MODER &= ~(3 << (5 * 2)); // Clear bits 10 and 11
+    GPIOA->MODER |=  (1 << (5 * 2)); // Set bit 10 to 1
+
+    // 3. Set Output Type to Push-Pull (0)
+    GPIOA->OTYPER &= ~(1 << 5);
+
+    // 4. Set Output Speed to High Speed (10)
+    GPIOA->OSPEEDR |= (2 << (5 * 2));
+
+    // 5. No pull-up, no pull-down (00)
+    GPIOA->PUPDR &= ~(3 << (5 * 2));
+}
+
+int main(void) {
+    GPIO_Init_BareMetal();
+    while(1) {
+        // Atomic Bit Set using BSRR (Bit Set/Reset Register)
+        GPIOA->BSRR = (1 << 5);         // Turn LED ON
+        for(volatile int i=0; i<500000; i++);
+        
+        GPIOA->BSRR = (1 << (5 + 16));  // Turn LED OFF (Reset in upper 16 bits)
+        for(volatile int i=0; i<500000; i++);
+    }
+}</pre>
+                    </div>
+                  `
+                },
+                {
+                  id: "stm32-dma",
+                  name: "UART_DMA_Circular_Buffer_Protocol.md",
+                  type: "file",
+                  meta: "DMA ARCHITECTURE • ZERO CPU OVERHEAD • TELEMETRY",
+                  title: "High-Throughput UART Receiving with Circular DMA",
+                  content: `
+                    <h2>1. Why Interrupt-Based UART Fails at High Baud Rates</h2>
+                    <p>At 921,600 baud, an interrupt fires every 10.8 microseconds. Servicing context switches exhausts the ARM Cortex-M4 pipeline. Direct Memory Access (DMA) routes incoming bytes straight from the UART Data Register into SRAM without waking the CPU.</p>
+                  `
+                }
+              ]
+            },
+            {
+              name: "Projects",
+              type: "folder",
+              children: [
+                {
+                  name: "Smart_Hostel_Power_Monitor",
+                  type: "folder",
+                  children: [
+                    {
+                      id: "project-power-bom",
+                      name: "Hardware_BOM_and_Pinouts.md",
+                      type: "file",
+                      meta: "PROJECT DOSSIER • ECE LAB • HARDWARE PINOUT",
+                      title: "Smart Hostel Power Monitor: Pinout & Bill of Materials",
+                      content: `
+                        <h2>1. Project Overview</h2>
+                        <p>Real-time electrical current and power measurement node deployed at Chandrashekhar Azad Hostel room electrical switchboards to log room power factor and peak wattage.</p>
+
+                        <h2>2. Hardware Pinout Table</h2>
+                        <table class="tech-table">
+                          <tr><th>Module Component</th><th>Sensor Pin</th><th>MCU Pin (ESP32)</th><th>Protocol / Voltage</th></tr>
+                          <tr><td>ACS712 Current Sensor</td><td>OUT</td><td>GPIO34 (ADC1_CH6)</td><td>Analog (0 - 3.3V via voltage divider)</td></tr>
+                          <tr><td>ZMPT101B Voltage Module</td><td>OUT</td><td>GPIO35 (ADC1_CH7)</td><td>Analog AC Phase Sample</td></tr>
+                          <tr><td>SSD1306 0.96" OLED</td><td>SDA / SCL</td><td>GPIO21 / GPIO22</td><td>I2C (Address 0x3C)</td></tr>
+                          <tr><td>Status Status NeoPixel</td><td>DIN</td><td>GPIO18</td><td>Single-Wire Digital 800kHz</td></tr>
+                        </table>
+                      `
+                    },
+                    {
+                      id: "project-power-firmware",
+                      name: "Firmware_RMS_Calculation.c",
+                      type: "file",
+                      meta: "FIRMWARE C CODE • NUMERICAL INTEGRATION • RMS SAMPLING",
+                      title: "Digital True RMS Current Calculation Engine",
+                      content: `
+                        <h2>Mathematical Implementation</h2>
+                        <p>Discrete time Root-Mean-Square calculation sampled over 10 full 50Hz AC mains cycles (200 milliseconds, 1000 discrete ADC conversions):</p>
+                        
+                        <div class="code-container">
+                          <div class="code-header">
+                            <span>C // DISCRETE TIME TRUE-RMS ENGINE</span>
+                            <button class="code-copy-btn" onclick="copySnippet(this)">COPY</button>
+                          </div>
+                          <pre class="code-body">#include &lt;math.h&gt;
+#define SAMPLES 1000
+#define VREF 3.3f
+#define SENSITIVITY 0.185f // 185mV/A for ACS712-05B
+
+float Calculate_True_RMS_Current(uint8_t adc_pin) {
+    uint32_t sum_squares = 0;
+    int16_t sample = 0;
+    int16_t zero_point = 2048; // 12-bit ADC midpoint (1.65V)
+
+    for (int i = 0; i < SAMPLES; i++) {
+        sample = analogRead(adc_pin) - zero_point;
+        sum_squares += (sample * sample);
+        delayMicroseconds(200); // 5kHz sampling rate
+    }
+
+    float mean_square = (float)sum_squares / SAMPLES;
+    float rms_adc = sqrtf(mean_square);
+    float voltage = (rms_adc * VREF) / 4095.0f;
+    return voltage / SENSITIVITY;
+}</pre>
+                        </div>
+                      `
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          name: "03_DIGITAL_VLSI_AND_VERILOG",
+          type: "folder",
+          children: [
+            {
+              id: "verilog-fsm",
+              name: "FSM_Design_Mealy_vs_Moore.v",
+              type: "file",
+              meta: "VERILOG HDL • FINITE STATE MACHINES • SYNTHESIS TEMPLATE",
+              title: "Two-Always-Block Finite State Machine Standard Template",
+              content: `
+                <h2>1. Moore vs Mealy Architecture</h2>
+                <p>In a <strong>Moore Machine</strong>, outputs depend strictly on the current state. In a <strong>Mealy Machine</strong>, outputs depend on both the current state and raw asynchronous inputs.</p>
+                
+                <div class="code-container">
+                  <div class="code-header">
+                    <span>VERILOG HDL // FINITE STATE MACHINE TEMPLATE</span>
+                    <button class="code-copy-btn" onclick="copySnippet(this)">COPY</button>
+                  </div>
+                  <pre class="code-body">module TrafficController_FSM (
+    input  wire clk,
+    input  wire reset_n,
+    input  wire vehicle_sensor,
+    output reg  red_led,
+    output reg  green_led
+);
+
+    typedef enum logic [1:0] {
+        STATE_RED   = 2'b00,
+        STATE_GREEN = 2'b01,
+        STATE_AMBER = 2'b10
+    } state_t;
+
+    state_t current_state, next_state;
+
+    // Block 1: Sequential State Memory
+    always @(posedge clk or negedge reset_n) begin
+        if (!reset_n)
+            current_state <= STATE_RED;
+        else
+            current_state <= next_state;
+    end
+
+    // Block 2: Combinational Next-State Logic
+    always @(*) begin
+        next_state = current_state;
+        case (current_state)
+            STATE_RED:   if (vehicle_sensor) next_state = STATE_GREEN;
+            STATE_GREEN: next_state = STATE_AMBER;
+            STATE_AMBER: next_state = STATE_RED;
+            default:     next_state = STATE_RED;
+        endcase
+    end
+endmodule</pre>
+                </div>
+              `
+            }
+          ]
+        }
+      ]
+    };
+
     function parseMarkdown(text) {
       if (!text) return '';
-      let processed = text
+      return text
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/`([^`]+)`/g, '<code style="font-family:var(--font-mono); font-size:13px; background:var(--tag-bg); padding:2px 5px; border-radius:3px;">$1</code>');
-      
-      // If raw text without HTML paragraphs, wrap double newlines in <p>
-      if (!processed.includes('<p>') && !processed.includes('<div')) {
-        const paras = processed.split(/\n\s*\n/);
-        processed = paras.map(p => `<p>${p.trim()}</p>`).join('');
-      }
-      return processed;
     }
 
-    // Navigation and Hash Routing (Enables Browser Back / Forward buttons)
+    // Navigation and Hash Routing
     function navigateTo(view, updateHash = true) {
       if (updateHash) {
         window.location.hash = view;
       }
       activeTab = view;
 
-      // Close search if open
-      const drawer = document.getElementById('search-drawer');
-      if (drawer.style.display === 'block') {
-        const input = document.getElementById('site-search');
-        if (input.value.trim() === '') {
-          drawer.style.display = 'none';
-          document.getElementById('search-btn').classList.remove('active');
-        }
-      }
-
       document.getElementById('view-dispatches').style.display = view === 'dispatches' ? 'block' : 'none';
       document.getElementById('view-essays').style.display = view === 'essays' ? 'block' : 'none';
+      document.getElementById('view-tech').style.display = view === 'tech' ? 'block' : 'none';
       document.getElementById('view-manifesto').style.display = view === 'manifesto' ? 'block' : 'none';
-      document.getElementById('view-admin').style.display = view === 'admin' ? 'block' : 'none';
       document.getElementById('view-article-reader').style.display = 'none';
       document.getElementById('no-results').style.display = 'none';
 
-      // Reset card visibilities
-      document.querySelectorAll('.filterable').forEach(card => card.style.display = 'block');
+      // Desktop links
+      ['dispatches', 'essays', 'tech', 'manifesto'].forEach(v => {
+        const link = document.getElementById('nav-' + v);
+        if (link) link.classList.toggle('active', view === v);
+      });
 
-      // Update Desktop Nav Links
-      document.getElementById('nav-dispatches').classList.toggle('active', view === 'dispatches');
-      document.getElementById('nav-essays').classList.toggle('active', view === 'essays');
-      document.getElementById('nav-manifesto').classList.toggle('active', view === 'manifesto');
-
-      // Update Mobile Tab Links
-      document.getElementById('mob-dispatches').classList.toggle('active', view === 'dispatches');
-      document.getElementById('mob-essays').classList.toggle('active', view === 'essays');
-      document.getElementById('mob-manifesto').classList.toggle('active', view === 'manifesto');
+      // Mobile bottom app bar
+      ['dispatches', 'essays', 'tech', 'manifesto'].forEach(v => {
+        const appItem = document.getElementById('mob-app-' + v);
+        if (appItem) appItem.classList.toggle('active', view === v);
+      });
 
       window.scrollTo(0, 0);
     }
@@ -1190,22 +2514,16 @@
       if (!art) return;
 
       currentArticleId = articleId;
-
-      if (updateHash) {
-        window.location.hash = 'read/' + articleId;
-      }
+      if (updateHash) window.location.hash = 'read/' + articleId;
 
       currentOrigin = art.origin;
       const backBtn = document.getElementById('reader-back-btn');
       backBtn.innerText = art.origin === 'dispatches' ? '← Back to Dispatches' : '← Back to Research Essays';
 
       const content = `
-        <div class="article-meta" style="margin-bottom:14px;">
-          ${art.meta}
-        </div>
+        <div class="article-meta" style="margin-bottom:14px;">${art.meta}</div>
         <h1 class="full-title">${art.title}</h1>
         <h2 class="full-subtitle">${art.subtitle}</h2>
-
         <div class="author-bar">
           <div style="display:flex; align-items:center; gap:14px;">
             <div class="author-avatar">&gt;_</div>
@@ -1215,18 +2533,14 @@
             </div>
           </div>
         </div>
-
-        <div class="prose">
-          ${parseMarkdown(art.html)}
-        </div>
+        <div class="prose">${parseMarkdown(art.html)}</div>
       `;
 
       document.getElementById('reader-content').innerHTML = content;
       document.getElementById('view-dispatches').style.display = 'none';
       document.getElementById('view-essays').style.display = 'none';
+      document.getElementById('view-tech').style.display = 'none';
       document.getElementById('view-manifesto').style.display = 'none';
-      document.getElementById('view-admin').style.display = 'none';
-      document.getElementById('no-results').style.display = 'none';
       document.getElementById('view-article-reader').style.display = 'block';
 
       window.scrollTo(0, 0);
@@ -1241,9 +2555,15 @@
       navigator.clipboard.writeText(shareUrl).then(() => {
         const textSpan = document.getElementById('share-text');
         textSpan.innerText = 'LINK COPIED!';
-        setTimeout(() => {
-          textSpan.innerText = 'SHARE / COPY LINK';
-        }, 2000);
+        setTimeout(() => { textSpan.innerText = 'SHARE / COPY LINK'; }, 2000);
+      });
+    }
+
+    function copySnippet(btn) {
+      const pre = btn.parentElement.nextElementSibling;
+      navigator.clipboard.writeText(pre.innerText).then(() => {
+        btn.innerText = 'COPIED!';
+        setTimeout(() => { btn.innerText = 'COPY'; }, 2000);
       });
     }
 
@@ -1263,6 +2583,26 @@
       }
     });
 
+    // Theme Toggle
+    function toggleTheme() {
+      const body = document.body;
+      const sunIcon = document.getElementById('icon-sun');
+      const moonIcon = document.getElementById('icon-moon');
+      const metaTheme = document.getElementById('meta-theme-color');
+
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'block';
+        if (metaTheme) metaTheme.setAttribute('content', '#ffffff');
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        sunIcon.style.display = 'block';
+        moonIcon.style.display = 'none';
+        if (metaTheme) metaTheme.setAttribute('content', '#050505');
+      }
+    }
+
     // Search Toggle & Execution
     function toggleSearch() {
       const drawer = document.getElementById('search-drawer');
@@ -1275,7 +2615,6 @@
         btn.classList.remove('active');
         input.value = '';
         document.getElementById('search-count').innerText = '';
-        // Restore view
         navigateTo(activeTab, false);
       } else {
         drawer.style.display = 'block';
@@ -1289,160 +2628,258 @@
       const countEl = document.getElementById('search-count');
       const noRes = document.getElementById('no-results');
 
-      // If user searches while reading or on manifesto, exit to feed
-      if (document.getElementById('view-article-reader').style.display === 'block' || activeTab === 'manifesto') {
-        document.getElementById('view-article-reader').style.display = 'none';
-        document.getElementById('view-manifesto').style.display = 'none';
-      }
-
       if (q === '') {
         countEl.innerText = '';
         navigateTo(activeTab, false);
         return;
       }
 
-      // In search mode, reveal both Dispatches and Essays so all matches surface
       document.getElementById('view-dispatches').style.display = 'block';
       document.getElementById('view-essays').style.display = 'block';
+      document.getElementById('view-tech').style.display = 'none';
+      document.getElementById('view-manifesto').style.display = 'none';
+      document.getElementById('view-article-reader').style.display = 'none';
 
-      let visibleDispatches = 0;
-      let visibleEssays = 0;
-
+      let count = 0;
       document.querySelectorAll('.filterable').forEach(card => {
         const text = card.innerText.toLowerCase();
         const matches = text.includes(q);
         card.style.display = matches ? 'block' : 'none';
-        
-        if (matches) {
-          if (card.getAttribute('data-type') === 'dispatch') visibleDispatches++;
-          else visibleEssays++;
-        }
+        if (matches) count++;
       });
 
-      const totalMatches = visibleDispatches + visibleEssays;
+      noRes.style.display = count === 0 ? 'block' : 'none';
+      countEl.innerText = count + ' FOUND';
+    }
 
-      // Adjust section headers visibility during search
-      document.getElementById('dispatches-header').style.display = visibleDispatches > 0 ? 'flex' : 'none';
-      document.getElementById('essays-header').style.display = visibleEssays > 0 ? 'flex' : 'none';
+    // ========================================================
+    // REFINED TECH VAULT (PURE SVG TREE & ROCK-SOLID FLEX)
+    // ========================================================
+    let allTechFiles = [];
 
-      if (totalMatches === 0) {
-        noRes.style.display = 'block';
-        noRes.innerText = `NO ARCHIVE ENTRIES FOUND MATCHING "${q.toUpperCase()}".`;
-        countEl.innerText = '0 RESULTS';
-      } else {
-        noRes.style.display = 'none';
-        countEl.innerText = `${totalMatches} FOUND`;
+    // Pure Minimalist SVG Icons (Zero Emojis)
+    const SVG_FOLDER = `<svg class="folder-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+    const SVG_CHEVRON = `<svg class="folder-chevron-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>`;
+    const SVG_FILE = `<svg class="file-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>`;
+
+    function renderTree(node, container, path = []) {
+      if (node.type === 'folder') {
+        if (node.name !== 'ROOT') {
+          const folderDiv = document.createElement('div');
+          folderDiv.className = 'tree-folder';
+
+          const header = document.createElement('div');
+          header.className = 'folder-header open';
+          header.innerHTML = `
+            ${SVG_CHEVRON}
+            ${SVG_FOLDER}
+            <span>${node.name}</span>
+          `;
+
+          const childrenContainer = document.createElement('div');
+          childrenContainer.className = 'folder-children';
+
+          header.onclick = (e) => {
+            e.stopPropagation();
+            header.classList.toggle('open');
+          };
+
+          folderDiv.appendChild(header);
+          folderDiv.appendChild(childrenContainer);
+          container.appendChild(folderDiv);
+
+          if (node.children) {
+            node.children.forEach(child => renderTree(child, childrenContainer, [...path, node.name]));
+          }
+        } else {
+          if (node.children) {
+            node.children.forEach(child => renderTree(child, container, []));
+          }
+        }
+      } else if (node.type === 'file') {
+        const fileDiv = document.createElement('div');
+        fileDiv.className = 'tree-file';
+        fileDiv.id = 'file-node-' + node.id;
+        fileDiv.innerHTML = `
+          ${SVG_FILE}
+          <span>${node.name}</span>
+        `;
+
+        const fullPath = [...path, node.name];
+        allTechFiles.push({ ...node, path: fullPath });
+
+        fileDiv.onclick = (e) => {
+          e.stopPropagation();
+          openTechDoc(node.id);
+        };
+
+        container.appendChild(fileDiv);
       }
     }
 
-    // Theme Toggle (Dark / Light Mode)
-    function toggleTheme() {
-      const body = document.body;
-      const sunIcon = document.getElementById('icon-sun');
-      const moonIcon = document.getElementById('icon-moon');
-      const metaTheme = document.getElementById('meta-theme-color');
+    function openTechDoc(docId) {
+      const doc = allTechFiles.find(f => f.id === docId);
+      if (!doc) return;
 
-      if (body.getAttribute('data-theme') === 'dark') {
-        body.setAttribute('data-theme', 'light');
-        sunIcon.style.display = 'none';
-        moonIcon.style.display = 'block';
-        if (metaTheme) metaTheme.setAttribute('content', '#ffffff');
-        try { localStorage.setItem('terminal_theme', 'light'); } catch (e) {}
-      } else {
-        body.setAttribute('data-theme', 'dark');
-        sunIcon.style.display = 'block';
-        moonIcon.style.display = 'none';
-        if (metaTheme) metaTheme.setAttribute('content', '#050505');
-        try { localStorage.setItem('terminal_theme', 'dark'); } catch (e) {}
+      currentDocId = docId;
+
+      document.querySelectorAll('.tree-file').forEach(el => el.classList.remove('active'));
+      const activeEl = document.getElementById('file-node-' + docId);
+      if (activeEl) activeEl.classList.add('active');
+
+      const breadcrumbsEl = document.getElementById('doc-breadcrumbs');
+      breadcrumbsEl.innerHTML = `<span>TECH VAULT</span>` + doc.path.map(p => `<span class="sep">/</span><span>${p}</span>`).join('');
+
+      document.getElementById('doc-title').innerText = doc.title;
+      document.getElementById('doc-meta-info').innerText = doc.meta;
+      document.getElementById('doc-body').innerHTML = doc.content;
+
+      window.location.hash = 'doc/' + docId;
+
+      // On phones, auto-scroll down to the document reader smoothly
+      if (window.innerWidth <= 860) {
+        document.getElementById('doc-viewer').scrollIntoView({ behavior: 'smooth' });
       }
     }
 
-    // Restore saved theme on load
-    (function initTheme() {
+    function copyCurrentTechDoc() {
+      const doc = allTechFiles.find(f => f.id === currentDocId);
+      if (!doc) return;
+      const shareUrl = window.location.origin + window.location.pathname + '#doc/' + currentDocId;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        const btn = document.getElementById('copy-tech-btn');
+        btn.querySelector('span').innerText = 'COPIED LINK!';
+        setTimeout(() => { btn.querySelector('span').innerText = 'COPY NOTE'; }, 2000);
+      });
+    }
+
+    function filterVaultFiles() {
+      const query = document.getElementById('vault-filter').value.toLowerCase().trim();
+      document.querySelectorAll('.tree-file').forEach(el => {
+        const text = el.innerText.toLowerCase();
+        el.style.display = (query === '' || text.includes(query)) ? 'flex' : 'none';
+      });
+    }
+
+    // Initialize Tree on Page Load
+    function toggleVaultSidebar() {
+      const sidebar = document.getElementById('vault-sidebar');
+      const toggleBtn = document.getElementById('vault-toggle-btn');
+      const toggleLabel = document.getElementById('vault-toggle-label');
+      if (!sidebar) return;
+
+      const isCollapsed = sidebar.classList.toggle('collapsed');
+
+      if (isCollapsed) {
+        if (toggleLabel) toggleLabel.textContent = 'Show Sidebar';
+        if (toggleBtn) toggleBtn.classList.add('collapsed-active');
+      } else {
+        if (toggleLabel) toggleLabel.textContent = 'Hide Sidebar';
+        if (toggleBtn) toggleBtn.classList.remove('collapsed-active');
+      }
+
       try {
-        const saved = localStorage.getItem('terminal_theme');
-        if (saved === 'light') toggleTheme();
+        localStorage.setItem('terminal_vault_sidebar_collapsed', isCollapsed ? '1' : '0');
       } catch (e) {}
-    })();
+    }
 
-    // Hash change listener (Handle browser Back / Forward buttons & #admin)
+    // Hotkey: Ctrl+B / Cmd+B toggles sidebar in Tech Vault
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b') {
+        if (activeTab === 'tech') {
+          e.preventDefault();
+          toggleVaultSidebar();
+        }
+      }
+    });
+
+    // PWA Service Worker & Install Handler
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => { console.log('Terminal PWA Worker Registered:', reg.scope); })
+          .catch((err) => { console.log('Terminal PWA Worker Registration Failed:', err); });
+      });
+    }
+
+    let deferredInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      const btn = document.getElementById('pwa-install-btn');
+      if (btn) btn.style.display = 'inline-flex';
+    });
+
+    function triggerPWAInstall() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        deferredInstallPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted PWA installation');
+          }
+          deferredInstallPrompt = null;
+        });
+      } else {
+        const modal = document.getElementById('pwa-modal');
+        if (modal) modal.classList.add('show');
+      }
+    }
+
+    function closePWAModal(e) {
+      const modal = document.getElementById('pwa-modal');
+      if (modal) modal.classList.remove('show');
+    }
+
+    function initTechVault() {
+      allTechFiles = [];
+      const container = document.getElementById('tree-container');
+      container.innerHTML = '';
+      renderTree(techRepository, container);
+      document.getElementById('file-count-label').innerText = `${allTechFiles.length} DOSSIERS`;
+
+      if (allTechFiles.length > 0) {
+        openTechDoc(allTechFiles[0].id);
+      }
+
+      try {
+        if (localStorage.getItem('terminal_vault_sidebar_collapsed') === '1') {
+          const sidebar = document.getElementById('vault-sidebar');
+          const toggleBtn = document.getElementById('vault-toggle-btn');
+          const toggleLabel = document.getElementById('vault-toggle-label');
+          if (sidebar) sidebar.classList.add('collapsed');
+          if (toggleLabel) toggleLabel.textContent = 'Show Sidebar';
+          if (toggleBtn) toggleBtn.classList.add('collapsed-active');
+        }
+      } catch (e) {}
+    }
+
+    // Hash Router
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash.replace('#', '');
       if (hash.startsWith('read/')) {
         const articleId = hash.replace('read/', '');
         navigateToArticle(articleId, false);
-      } else if (['dispatches', 'essays', 'manifesto', 'admin'].includes(hash)) {
+      } else if (hash.startsWith('doc/')) {
+        navigateTo('tech', false);
+        openTechDoc(hash.replace('doc/', ''));
+      } else if (['dispatches', 'essays', 'tech', 'manifesto'].includes(hash)) {
         navigateTo(hash, false);
-      } else if (!hash) {
-        navigateTo('dispatches', false);
       }
     });
 
-    // Initial Route Handler
-    (function initRoute() {
+    // Boot
+    (function init() {
+      initTechVault();
       const hash = window.location.hash.replace('#', '');
       if (hash.startsWith('read/')) {
         navigateToArticle(hash.replace('read/', ''), false);
-      } else if (['dispatches', 'essays', 'manifesto', 'admin'].includes(hash)) {
+      } else if (hash.startsWith('doc/')) {
+        navigateTo('tech', false);
+        openTechDoc(hash.replace('doc/', ''));
+      } else if (['dispatches', 'essays', 'tech', 'manifesto'].includes(hash)) {
         navigateTo(hash, false);
       }
     })();
-
-    // Hotkey: Ctrl+Shift+P opens Hidden Terminal Studio Desk
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'p') {
-        e.preventDefault();
-        navigateTo('admin');
-      }
-      if (e.key === 'Escape') {
-        const drawer = document.getElementById('search-drawer');
-        if (drawer.style.display === 'block') toggleSearch();
-      }
-    });
-
-    // ADMIN STUDIO FUNCTIONS
-    function testPreviewArticle() {
-      const id = document.getElementById('admin-id').value.trim() || 'preview-draft';
-      const type = document.getElementById('admin-type').value;
-      const title = document.getElementById('admin-title').value.trim() || 'Untitled Draft';
-      const subtitle = document.getElementById('admin-subtitle').value.trim() || '';
-      const meta = document.getElementById('admin-meta').value.trim() || 'DRAFT // PREVIEW';
-      const body = document.getElementById('admin-body').value.trim();
-
-      articles[id] = {
-        origin: type === 'dispatch' ? 'dispatches' : 'essays',
-        meta: meta,
-        title: title,
-        subtitle: subtitle,
-        html: body
-      };
-
-      navigateToArticle(id);
-    }
-
-    function generateExportSnippet() {
-      const id = document.getElementById('admin-id').value.trim() || 'essay-id';
-      const type = document.getElementById('admin-type').value;
-      const title = document.getElementById('admin-title').value.trim();
-      const subtitle = document.getElementById('admin-subtitle').value.trim();
-      const meta = document.getElementById('admin-meta').value.trim();
-      const body = document.getElementById('admin-body').value.trim();
-
-      const snippet = `
-      '${id}': {
-        origin: '${type === 'dispatch' ? 'dispatches' : 'essays'}',
-        meta: '${meta}',
-        title: '${title.replace(/'/g, "\\'")}',
-        subtitle: '${subtitle.replace(/'/g, "\\'")}',
-        html: \`
-          ${body}
-        \`
-      },`;
-
-      navigator.clipboard.writeText(snippet).then(() => {
-        alert("Article code snippet copied to clipboard! You can paste it right into the articles list in index.html.");
-      });
-    }
   </script>
 </body>
 </html>
