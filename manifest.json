@@ -8,7 +8,7 @@
   "theme_color": "#050505",
   "icons": [
     {
-      "src": "logos/logo_indian_squircle_chakra.png",
+      "src": "logos/logo_prompt_pure.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any maskable"
