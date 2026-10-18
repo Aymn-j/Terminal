@@ -75,6 +75,18 @@
       transition: background-color 0.2s ease, border-color 0.2s ease;
     }
 
+    /* READING PROGRESS BAR AT TOP */
+    #scroll-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--text-main);
+      opacity: 0;
+      transition: width 0.05s ease-out, opacity 0.2s;
+    }
+
     .nav-container {
       max-width: 760px;
       margin: 0 auto;
@@ -96,6 +108,17 @@
       gap: 10px;
       cursor: pointer;
       user-select: none;
+    }
+
+    .brand-glyph {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    .brand:hover .brand-glyph {
+      transform: scale(1.08);
     }
 
     .brand span.tag {
@@ -340,6 +363,13 @@
     }
 
     /* FULL ARTICLE READER VIEW */
+    .reader-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
     .back-btn {
       display: inline-flex;
       align-items: center;
@@ -350,7 +380,6 @@
       color: var(--text-muted);
       text-transform: uppercase;
       cursor: pointer;
-      margin-bottom: 32px;
       padding: 8px 14px;
       background: var(--tag-bg);
       border: 1px solid var(--border);
@@ -359,6 +388,27 @@
     }
 
     .back-btn:hover {
+      color: var(--text-main);
+      border-color: var(--text-dim);
+    }
+
+    .share-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .share-btn:hover {
       color: var(--text-main);
       border-color: var(--text-dim);
     }
@@ -388,8 +438,8 @@
 
     .author-bar {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 14px;
       padding: 14px 0;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
@@ -546,6 +596,84 @@
       letter-spacing: 1px;
     }
 
+    /* HIDDEN ADMIN STUDIO */
+    #view-admin {
+      display: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+      background: var(--card-bg);
+      margin-top: 10px;
+    }
+
+    .admin-input-group {
+      margin-bottom: 18px;
+    }
+
+    .admin-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .admin-input, .admin-select, .admin-textarea {
+      width: 100%;
+      background: var(--bg-color);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .admin-input:focus, .admin-textarea:focus {
+      border-color: var(--text-dim);
+    }
+
+    .admin-textarea {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      line-height: 1.5;
+      min-height: 220px;
+      resize: vertical;
+    }
+
+    .admin-btn-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .admin-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 10px 18px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .admin-btn-primary {
+      background: var(--text-main);
+      color: var(--bg-color);
+      border: 1px solid var(--text-main);
+      font-weight: 700;
+    }
+
+    .admin-btn-secondary {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
     footer {
       max-width: 760px;
       margin: 60px auto 0 auto;
@@ -575,8 +703,16 @@
 <body data-theme="dark">
 
   <header>
+    <div id="scroll-progress"></div>
+
     <div class="nav-container">
-      <div class="brand" onclick="navigateTo('dispatches')">
+      <!-- BRAND WITH MINIMALIST TERMINAL LOGO GLYPH -->
+      <div class="brand" onclick="navigateTo('dispatches')" title="The Terminal Intelligence Home">
+        <svg class="brand-glyph" viewBox="0 0 100 100">
+          <rect width="100" height="100" rx="22" fill="var(--text-main)"/>
+          <polyline points="28,32 50,50 28,68" stroke="var(--bg-color)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="58" y1="68" x2="78" y2="68" stroke="var(--bg-color)" stroke-width="11" stroke-linecap="round"/>
+        </svg>
         <span>THE TERMINAL</span>
         <span class="tag">INTELLIGENCE</span>
       </div>
@@ -721,7 +857,13 @@
 
     <!-- VIEW 3: DEDICATED FULL ARTICLE READER -->
     <section id="view-article-reader" style="display:none;">
-      <div class="back-btn" id="reader-back-btn" onclick="goBackFromReader()">← Back to Feed</div>
+      <div class="reader-top-bar">
+        <div class="back-btn" id="reader-back-btn" onclick="goBackFromReader()">← Back to Feed</div>
+        <button class="share-btn" id="reader-share-btn" onclick="copyCurrentArticleLink()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span id="share-text">SHARE / COPY LINK</span>
+        </button>
+      </div>
       <article id="reader-content">
         <!-- Injected dynamically via JavaScript -->
       </article>
@@ -742,10 +884,12 @@
         </h2>
 
         <div class="author-bar">
-          <div class="author-avatar">&gt;_</div>
-          <div class="author-info">
-            <strong>The Terminal Desk</strong>
-            <span>Independent Strategic Research & Macro Intelligence</span>
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div class="author-avatar">&gt;_</div>
+            <div class="author-info">
+              <strong>The Terminal Desk</strong>
+              <span>Independent Strategic Research & Macro Intelligence</span>
+            </div>
           </div>
         </div>
 
@@ -795,6 +939,53 @@
         </div>
       </article>
     </section>
+
+    <!-- VIEW 5: HIDDEN TERMINAL STUDIO (#admin or Ctrl+Shift+P) -->
+    <section id="view-admin">
+      <div class="section-header">
+        <span class="section-title">TERMINAL DESK STUDIO // ARTICLE DRAFTER & PUBLISHER</span>
+        <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">ROOT ACCESS</span>
+      </div>
+
+      <div class="admin-input-group">
+        <label class="admin-label">Publish Type</label>
+        <select id="admin-type" class="admin-select">
+          <option value="essay">Weekly Research Essay (Monograph)</option>
+          <option value="dispatch">Daily Strategic Dispatch</option>
+        </select>
+      </div>
+
+      <div class="admin-input-group">
+        <label class="admin-label">Article Slug ID (e.g. essay-railway, dispatch-002)</label>
+        <input type="text" id="admin-id" class="admin-input" placeholder="essay-sample-topic">
+      </div>
+
+      <div class="admin-input-group">
+        <label class="admin-label">Meta Line (e.g. ESSAY #004 // 7 MIN READ • NOV 2026 • INFRASTRUCTURE)</label>
+        <input type="text" id="admin-meta" class="admin-input" placeholder="ESSAY #004 // 7 MIN READ • OCTOBER 2026 • SECTOR">
+      </div>
+
+      <div class="admin-input-group">
+        <label class="admin-label">Main Title</label>
+        <input type="text" id="admin-title" class="admin-input" placeholder="Enter headline...">
+      </div>
+
+      <div class="admin-input-group">
+        <label class="admin-label">Subtitle / Deck</label>
+        <input type="text" id="admin-subtitle" class="admin-input" placeholder="Executive summary of the thesis...">
+      </div>
+
+      <div class="admin-input-group">
+        <label class="admin-label">Article Body (Supports **bold**, *italic*, paragraphs, headers, and bullet points)</label>
+        <textarea id="admin-body" class="admin-textarea" placeholder="Write or paste your article markdown here..."></textarea>
+      </div>
+
+      <div class="admin-btn-row">
+        <button class="admin-btn admin-btn-primary" onclick="testPreviewArticle()">Test Live Preview</button>
+        <button class="admin-btn admin-btn-secondary" onclick="generateExportSnippet()">Copy Code Snippet</button>
+        <button class="admin-btn admin-btn-secondary" onclick="navigateTo('dispatches')">Exit Studio</button>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -805,6 +996,7 @@
   <script>
     let activeTab = 'dispatches';
     let currentOrigin = 'dispatches';
+    let currentArticleId = '';
 
     // Articles Database
     const articles = {
@@ -937,13 +1129,20 @@
       }
     };
 
-    // Robust Markdown Helper (Bold, Italic, Code)
+    // Robust Markdown Helper (Bold, Italic, Code, Paragraphs)
     function parseMarkdown(text) {
       if (!text) return '';
-      return text
+      let processed = text
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.*?)\*/g, '<em>$1</em>')
         .replace(/`([^`]+)`/g, '<code style="font-family:var(--font-mono); font-size:13px; background:var(--tag-bg); padding:2px 5px; border-radius:3px;">$1</code>');
+      
+      // If raw text without HTML paragraphs, wrap double newlines in <p>
+      if (!processed.includes('<p>') && !processed.includes('<div')) {
+        const paras = processed.split(/\n\s*\n/);
+        processed = paras.map(p => `<p>${p.trim()}</p>`).join('');
+      }
+      return processed;
     }
 
     // Navigation and Hash Routing (Enables Browser Back / Forward buttons)
@@ -966,6 +1165,7 @@
       document.getElementById('view-dispatches').style.display = view === 'dispatches' ? 'block' : 'none';
       document.getElementById('view-essays').style.display = view === 'essays' ? 'block' : 'none';
       document.getElementById('view-manifesto').style.display = view === 'manifesto' ? 'block' : 'none';
+      document.getElementById('view-admin').style.display = view === 'admin' ? 'block' : 'none';
       document.getElementById('view-article-reader').style.display = 'none';
       document.getElementById('no-results').style.display = 'none';
 
@@ -989,6 +1189,8 @@
       const art = articles[articleId];
       if (!art) return;
 
+      currentArticleId = articleId;
+
       if (updateHash) {
         window.location.hash = 'read/' + articleId;
       }
@@ -1005,10 +1207,12 @@
         <h2 class="full-subtitle">${art.subtitle}</h2>
 
         <div class="author-bar">
-          <div class="author-avatar">&gt;_</div>
-          <div class="author-info">
-            <strong>The Terminal Desk</strong>
-            <span>Independent Strategic Research & Macro Intelligence</span>
+          <div style="display:flex; align-items:center; gap:14px;">
+            <div class="author-avatar">&gt;_</div>
+            <div class="author-info">
+              <strong>The Terminal Desk</strong>
+              <span>Independent Strategic Research & Macro Intelligence</span>
+            </div>
           </div>
         </div>
 
@@ -1021,6 +1225,7 @@
       document.getElementById('view-dispatches').style.display = 'none';
       document.getElementById('view-essays').style.display = 'none';
       document.getElementById('view-manifesto').style.display = 'none';
+      document.getElementById('view-admin').style.display = 'none';
       document.getElementById('no-results').style.display = 'none';
       document.getElementById('view-article-reader').style.display = 'block';
 
@@ -1030,6 +1235,33 @@
     function goBackFromReader() {
       navigateTo(currentOrigin);
     }
+
+    function copyCurrentArticleLink() {
+      const shareUrl = window.location.origin + window.location.pathname + '#read/' + currentArticleId;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        const textSpan = document.getElementById('share-text');
+        textSpan.innerText = 'LINK COPIED!';
+        setTimeout(() => {
+          textSpan.innerText = 'SHARE / COPY LINK';
+        }, 2000);
+      });
+    }
+
+    // Scroll Progress Indicator
+    window.addEventListener('scroll', () => {
+      const progressBar = document.getElementById('scroll-progress');
+      const reader = document.getElementById('view-article-reader');
+      if (reader && reader.style.display === 'block') {
+        const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (totalHeight > 0) {
+          const progress = (window.scrollY / totalHeight) * 100;
+          progressBar.style.width = Math.min(progress, 100) + '%';
+          progressBar.style.opacity = '1';
+        }
+      } else {
+        progressBar.style.opacity = '0';
+      }
+    });
 
     // Search Toggle & Execution
     function toggleSearch() {
@@ -1133,13 +1365,13 @@
       } catch (e) {}
     })();
 
-    // Hash change listener (Handle browser Back / Forward buttons)
+    // Hash change listener (Handle browser Back / Forward buttons & #admin)
     window.addEventListener('hashchange', () => {
       const hash = window.location.hash.replace('#', '');
       if (hash.startsWith('read/')) {
         const articleId = hash.replace('read/', '');
         navigateToArticle(articleId, false);
-      } else if (['dispatches', 'essays', 'manifesto'].includes(hash)) {
+      } else if (['dispatches', 'essays', 'manifesto', 'admin'].includes(hash)) {
         navigateTo(hash, false);
       } else if (!hash) {
         navigateTo('dispatches', false);
@@ -1151,18 +1383,66 @@
       const hash = window.location.hash.replace('#', '');
       if (hash.startsWith('read/')) {
         navigateToArticle(hash.replace('read/', ''), false);
-      } else if (['dispatches', 'essays', 'manifesto'].includes(hash)) {
+      } else if (['dispatches', 'essays', 'manifesto', 'admin'].includes(hash)) {
         navigateTo(hash, false);
       }
     })();
 
-    // Escape key closes search drawer
+    // Hotkey: Ctrl+Shift+P opens Hidden Terminal Studio Desk
     document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'p') {
+        e.preventDefault();
+        navigateTo('admin');
+      }
       if (e.key === 'Escape') {
         const drawer = document.getElementById('search-drawer');
         if (drawer.style.display === 'block') toggleSearch();
       }
     });
+
+    // ADMIN STUDIO FUNCTIONS
+    function testPreviewArticle() {
+      const id = document.getElementById('admin-id').value.trim() || 'preview-draft';
+      const type = document.getElementById('admin-type').value;
+      const title = document.getElementById('admin-title').value.trim() || 'Untitled Draft';
+      const subtitle = document.getElementById('admin-subtitle').value.trim() || '';
+      const meta = document.getElementById('admin-meta').value.trim() || 'DRAFT // PREVIEW';
+      const body = document.getElementById('admin-body').value.trim();
+
+      articles[id] = {
+        origin: type === 'dispatch' ? 'dispatches' : 'essays',
+        meta: meta,
+        title: title,
+        subtitle: subtitle,
+        html: body
+      };
+
+      navigateToArticle(id);
+    }
+
+    function generateExportSnippet() {
+      const id = document.getElementById('admin-id').value.trim() || 'essay-id';
+      const type = document.getElementById('admin-type').value;
+      const title = document.getElementById('admin-title').value.trim();
+      const subtitle = document.getElementById('admin-subtitle').value.trim();
+      const meta = document.getElementById('admin-meta').value.trim();
+      const body = document.getElementById('admin-body').value.trim();
+
+      const snippet = `
+      '${id}': {
+        origin: '${type === 'dispatch' ? 'dispatches' : 'essays'}',
+        meta: '${meta}',
+        title: '${title.replace(/'/g, "\\'")}',
+        subtitle: '${subtitle.replace(/'/g, "\\'")}',
+        html: \`
+          ${body}
+        \`
+      },`;
+
+      navigator.clipboard.writeText(snippet).then(() => {
+        alert("Article code snippet copied to clipboard! You can paste it right into the articles list in index.html.");
+      });
+    }
   </script>
 </body>
 </html>
